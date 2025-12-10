@@ -25,14 +25,14 @@ git clone https://github.com/YousufAbubakr/morphologies.git
 
 ## Repository Setup
 ```
-📦morphoogies
- ┣ 📂pipeline                ← end-to-end workflow for processing vertebral and disc morphology data
+📦morphoogies                
  ┣ 📂results                 ← output files, figures, exported meshes, etc.
  ┣ 📂src                     ← utility, analysis, and vertebrae/disc codes
  ┃ ┣ 📂analysis
- ┃ ┣ 📂disc
- ┃ ┣ 📂utils
- ┃ ┣ 📂vertebra
+ ┃ ┣ 📂disc-utils            ← utility functions related to disc morphology processing
+ ┃ ┣ 📂gen-utils             ← utility functions related to general processing
+ ┃ ┣ 📂vert-utils            ← utility functions related to vertebra morphology processing
+ ┃ ┣ 📜main.m                ← end-to-end workflow program for processing vertebral and disc morphology data
  ┣ 📂stl-geometries          ← source .stl geometry data
  ┃ ┣ 📂disc-stls
  ┃ ┃ ┣ 📂Subject A
