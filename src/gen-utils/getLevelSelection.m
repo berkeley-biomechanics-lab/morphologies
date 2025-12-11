@@ -56,18 +56,20 @@ function selectedLevels = getLevelSelection(measuredLevels, allLevelNames)
     end
 
     % ---- OPTION 3: Explicit list ["T2","T5",...] ----
-    if isstring(measuredLevels) && ~isscalar(measuredLevels)
+    if isstring(measuredLevels) && ...
+       (numel(measuredLevels) > 1 || (isscalar(measuredLevels) && measuredLevels ~= "all" ...
+            && isempty(regexp(measuredLevels, rangeExpr, "once"))))
     
-        % 1. Check for duplicates (correct method)
-        [~, ia, ~] = unique(measuredLevels);
+        % 1. Check for duplicates
+        [~, ia] = unique(measuredLevels);
         dupIdx = setdiff(1:numel(measuredLevels), ia);
         if ~isempty(dupIdx)
             dupNames = unique(measuredLevels(dupIdx));
-            error("Measured level list contains duplicate entries: %s", ...
+            error("Measured level list contains duplicates: %s", ...
                 strjoin(dupNames, ", "));
         end
     
-        % 2. Validate each level exists
+        % 2. Validate entries
         for lvl = measuredLevels
             if ~ismember(lvl, allLevelNames)
                 error("Invalid level '%s'. Allowed levels: %s", ...
@@ -75,13 +77,13 @@ function selectedLevels = getLevelSelection(measuredLevels, allLevelNames)
             end
         end
     
-        % 3. Sort levels using anatomical order (based on all_level_names)
+        % 3. Sort using anatomical order
         [~, order] = ismember(measuredLevels, allLevelNames);
         [~, sortIdx] = sort(order);
-        selectedLevels = measuredLevels(sortIdx);
     
+        selectedLevels = measuredLevels(sortIdx);
         return;
-    end    
+    end 
 
     error("Invalid format for measuredLevels. See documentation.");
 end

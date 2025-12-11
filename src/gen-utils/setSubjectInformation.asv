@@ -1,0 +1,81 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Grace O'Connell Biomechanics Lab, UC Berkeley Department of Mechanical
+% Engineering - Etchverry 2162
+%
+% File: getLevelsInformation.m
+% Author: Yousuf Abubakr
+% Project: Morphologies
+% Last Updated: 12-10-2025
+%
+% Description: getting the file paths, level names, and number of 
+% levels associated with each subjects' vertebrae and discs given the
+% user-defined settings
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+clc; % clearing command window
+
+% Getting workspace variables at the start of the new script:
+varsbefore = who;
+
+%% CHECKING MEASUREDLEVELS VARIABLE AND GETTING DESIRED VERTEBRA LEVELS
+% checking to see if the user-defined 'measuredLevels' variable has been
+% defined appropriately, valid formats of 'measuredLevels' include:
+%       1) "all"
+%       2) "L1 - L6"         (range)
+%       3) ["T1","T5",...]   (list)
+
+% Validating format of 'measuredLevels' and getting the associated
+% desired vertebral levels to-be-measured:
+selectedLevels = getLevelSelection(measuredLevels, allLevelNames);
+
+%% CHECKING MEASUREDSUBJECTS VARIABLE AND GETTING DESIRED SUBJECTS
+% checking to see if the user-defined 'measuredSubjects' variable has been
+% defined appropriately, valid formats of 'measuredSubjects' include:
+%       1) "all"
+%       3) ["643", "666", "717", ...]   (list)
+
+% Validating format of 'measuredSubjects' and getting the associated
+% desired subjects to-be-measured:
+selectedSubjects = getSubjectSelection(measuredSubjects, allSubjectNames);
+
+%% SETTING DATA OF VERTEBRA LEVEL PROPERTIES FOR EACH SUBJECT
+% organizing vertebral datas and constructing 'subject' data struct 
+
+% Getting array of vertebral data structs, one per subject, in 
+% 'vertebraSTLData' and string array of selected subject names in
+% 'subjectNames':
+[vertebraSTLData, subjectNames] = getVertebraSTLInformation(vertPath, ...
+                                                    selectedSubjects, ...
+                                                    selectedLevels);
+
+% Using the subject name --> subject state dictionary to get the kyphotic
+% states of the corresponding subjects in 'subjectNames':
+subjectStates = subjectDict(subjectNames);
+
+% Initializing subjects structure, with names and states:
+subject = struct('name', num2cell(subjectNames), ...
+                    'isKyphotic', num2cell(subjectStates));
+
+% Storing vertebral data in the 'subject' structure:
+for i = 1:length(subject)
+    subject(i).vertebrae = vertebraSTLData(i).vertebrae;
+end
+
+%% SETTING DATA OF DISC LEVEL PROPERTIES FOR EACH SUBJECT
+% organizing disc datas and appending to 'subject' data struct 
+
+% UNDER CONSTRUCTION -->
+% [develop procedure that automates filling in the file path locations for
+% the disc files. Disc file paths can be deterministically
+% found based on the vertebrae files.]
+
+%% MATLAB cleanup
+
+% Deleting extraneous subroutine variables:
+varsafter = who; % get names of all variables in 'varsbefore' plus variables
+varsremove = setdiff(varsafter, varsbefore); % variables  defined in the script
+varskeep = {'subjectNames', 'subjectStates', 'subject'};
+varsremove(ismember(varsremove, varskeep)) = {''};
+clear(varsremove{:})
+
