@@ -11,7 +11,7 @@
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-clear; clc; % clearing command window
+clear; clc; % clearing command window and workspace variables
 
 set(0,'DefaultFigureWindowStyle','docked') % docking figures
 warning('off','all') % turning off warnings
@@ -110,31 +110,41 @@ subjectData = struct('numSubjects', numSubjects, ...
 % porcine subject has a maximum of 21-segmentable levels (15 thoracic and 6 
 % lumbar), of which >= 21 are available in the 'vertPath' directory. The
 % user must define which of the 21 levels they would like to measure in the
-% following three options:
+% following three formatting options:
 %           1.) Measure all levels: "all"
 %           2.) Measure levels that lie in a certain interval:
-%                   "upper level - lower level" (Example: "L1 - L6")
-%           3.) Measure specific levels: ["T2", "T5", "T10", "L3", "L4"]
-% The user must also specify whether or not they wish to overwrite the
-% measurement process with the boolean variable 'overwrite'. This means if
-% the measurements for a particular level have already been made,
-% processed, and written and 'overwrite' = false, then this level will be
-% skipped.
-%
+%                   "[upper level] - [lower level]" (Example: "L1 - L6")
+%           3.) Measure specific levels: ["T2", "T5", "T10", ...]
 % The selection of vertebra levels will also determine the selection of
 % disc levels. For example, if the vertebra levels "L1 - L6" are chosen,
 % then the associated disc levels to be processed are "L1-L2 - L5-L6".
 %
 % Default settings will be:
-%       --> Levels: 'all'
-%       --> 'overwrite' = true
-overwrite = true;
-measuredLevels = 'all';
+%       --> Levels: "all"
+measuredLevels = "all";
 
-% Subsequently, we describe the file paths, level names, and number of 
+% By the same token, we wish to classify which of the availible subjects
+% we'd like to involve in the measurement pipeline. The user must define
+% which of the subjects from 'subjectNames' they would like to measure in 
+% the following two formatting options:
+%           1.) Measure all subjects: "all"
+%           2.) Measure specific subjects: ["643", "666", "717", ...]
+% Default settings will be:
+%       --> Subjects: "all"
+measuredSubjects = "all";
+
+% The user must also specify whether or not they wish to overwrite the
+% measurement process with the boolean variable 'overwrite'. This means if
+% the measurements for a particular level have already been made,
+% processed, and written and 'overwrite' = false, then this level will be
+% skipped.
+overwrite = true;
+
+% Subsequently, we describe the level names, file paths, and number of 
 % levels associated with each subjects' vertebrae and discs given the
 % user-defined settings and append this information into 'subjects' using
 % the following subroutine.
+getLevelsInformation;
 
 % UNDER CONSTRUCTION -->
 % [develop procedure that automates filling in the file path locations for
