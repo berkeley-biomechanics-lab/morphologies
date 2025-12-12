@@ -1,5 +1,5 @@
-function [vertebraSTLData, selectedSubjectsCopy] = getVertebraSTLInformation(vertPath, selectedSubjects, selectedLevels)
-% Return array of structs, one per subject, describing the subjects' 
+function [vertebraData, selectedSubjectsCopy] = getVertebraInformation(vertPath, selectedSubjects, selectedLevels)
+% Return array of structs, 'vertebraData', describing the subjects' 
 % vertebrae information and also string array of selected subject names.
 % Each struct contains:
 %   --> .vertebrae.subjName
@@ -40,9 +40,9 @@ function [vertebraSTLData, selectedSubjectsCopy] = getVertebraSTLInformation(ver
     end
 
     % -----------------------------------------------------------
-    % 3. Build the subjectData output
+    % 3. Build the vertebraData output
     % -----------------------------------------------------------
-    vertebraSTLData = repmat(struct(), numel(selectedSubjectsCopy), 1);
+    vertebraData = repmat(struct(), numel(selectedSubjectsCopy), 1);
 
     for i = 1:numel(selectedSubjectsCopy)
 
@@ -87,11 +87,11 @@ function [vertebraSTLData, selectedSubjectsCopy] = getVertebraSTLInformation(ver
         % -------------------------------------------------------
         % Construct per-subject struct
         % -------------------------------------------------------
-        vertebraSTLData(i).vertebrae.subjName = subjName;
+        vertebraData(i).vertebrae.subjName = subjName;
 
-        vertebraSTLData(i).vertebrae.levelNames = selectedLevelsCopy;
-        vertebraSTLData(i).vertebrae.levelPaths = selectedPaths;
-        vertebraSTLData(i).vertebrae.numLevels = numel(selectedLevelsCopy);
+        vertebraData(i).vertebrae.levelNames = selectedLevelsCopy;
+        vertebraData(i).vertebrae.levelPaths = selectedPaths;
+        vertebraData(i).vertebrae.numLevels = numel(selectedLevelsCopy);
     end
 end
 

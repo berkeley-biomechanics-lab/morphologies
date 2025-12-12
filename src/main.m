@@ -19,10 +19,9 @@ warning('off','all') % turning off warnings
 format compact; % suppressing blank lines and decreasing spacing in the CW
 
 %% DIRECTORY INFORMATION
-% storing names of all necessary directories
-%
-% ASSUMPTION: directories and stl geometry files are configured according 
-% to setup described in the README.md file at the head of the repo.
+% Storing names of all necessary directories. ASSUMPTION: directories and 
+% stl geometry files are configured according to setup described in the 
+% README.md file at the head of the repo.
 
 mainFile = matlab.desktop.editor.getActiveFilename; % path of 'main.m' file
 srcPath = fileparts(mainFile); % directory path that holds 'main.m' file
@@ -30,19 +29,13 @@ projectPath = fileparts(srcPath); % morphologies repo path
 cd(srcPath); % setting MATLAB repo to the 'main.m' repo
 
 % Getting paths of vertebral and disc stl files:
-stlDir = 'stl-geometries'; % name of stl geometry directory
-vertDir = 'vertebra-stls'; % name of vertebrae geometry directory
-discDir = 'disc-stls'; % name of disc geometry directory
-
+stlDir = 'stl-geometries'; vertDir = 'vertebra-stls'; discDir = 'disc-stls';
 stlPath = fullfile(projectPath, stlDir); % stl geometry path
 vertPath = fullfile(stlPath, vertDir); % vertebrae geometry path
 discPath = fullfile(stlPath, discDir); % disc geometry path
 
 % Getting paths of utility functions:
-genUtilsDir = 'gen-utils'; % name of general utilities directory
-vertUtilsDir = 'vert-utils'; % name of vertebral utilities directory
-discUtilsDir = 'disc-utils'; % name of disc utilities directory
-
+genUtilsDir = 'gen-utils'; vertUtilsDir = 'vert-utils'; discUtilsDir = 'disc-utils';
 genUtilPath = fullfile(srcPath, genUtilsDir); % stl geometry path
 vertUtilPath = fullfile(srcPath, vertUtilsDir); % vertebrae geometry path
 discUtilPath = fullfile(srcPath, discUtilsDir); % disc geometry path
@@ -51,7 +44,7 @@ discUtilPath = fullfile(srcPath, discUtilsDir); % disc geometry path
 addpath(genUtilPath, vertUtilPath, discUtilPath);
 
 %% SUBJECT INFORMATION
-% initializing the porcine subject data structure
+% Initializing the porcine subject data structure
  
 % 'subjectData' is a struct that stores the necessary data associated
 % with the study, including the # of subjects, # of kyphotic subjects,
@@ -83,13 +76,10 @@ addpath(genUtilPath, vertUtilPath, discUtilPath);
 %                               ┣ .measurements.heights
 %                               ┣ .measurements.volumes
 %                               ┣ ...
-
 % Before intializing the 'subject' data structure, we must manually provide
-% some information to get us started. 
-% 
-% ASSUMPTION: the data is structured such that each subject has a unique 
-% 3-digit name and kyphotic state associated with it. Therefore, we
-% classify these subjects' datas here:
+% some information to get us started. ASSUMPTION: the data is structured 
+% such that each subject has a unique 3-digit name and kyphotic state 
+% associated with it. Therefore, we classify these subjects' datas here:
 allSubjectNames = ["643", "658", "660", "665", "666", "717", "723", ...
                         "735", "743", "764", "765", "766", "778", "779"];
 allSubjectStates = [false, true, true, true, true, false, false, ...
@@ -129,13 +119,6 @@ measuredLevels = "all";
 %       --> Subjects: "all"
 measuredSubjects = "all";
 
-% The user must also specify whether or not they wish to overwrite the
-% measurement process with the boolean variable 'overwrite'. This means if
-% the measurements for a particular level have already been made,
-% processed, and written and 'overwrite' = false, then this level will be
-% skipped.
-overwrite = true;
-
 % Notes about pipeline data structure:
 %    --> 'subjectData' is the parent struct and 'subject' is the child
 %        struct
@@ -153,9 +136,10 @@ overwrite = true;
 % levels associated with each subjects' vertebrae and discs given the
 % user-defined settings and append this information into 'subjects' using
 % the following subroutine:
-setSubjectInformation; % returns 'subject'
+setSubjectInformation; % returns 'subject', 'subjectNames', 'subjectStates'
 
-% [comment here]
+% Contructing 'subjectData' struct with global subject properties and
+% already-contructed 'subject' struct:
 numSubjects = length(subject); % number of porcine subjects
 numKyphoticSubjects = sum(subjectStates); % number of kyphotic porcine subjects
 numControlSubjects = sum(~subjectStates); % number of control porcine subjects
@@ -163,3 +147,22 @@ subjectData = struct('numSubjects', numSubjects, ...
                         'numKyphoticSubjects', numKyphoticSubjects, ...
                         'numControlSubjects', numControlSubjects, ...
                         'subject', subject);
+
+%% OVERWRITE PROPERTIES
+% The user must also specify whether or not they wish to overwrite the
+% measurement process with the boolean variable 'overwriteMeasures'. This 
+% means if the measurements for a particular level have already been made,
+% processed, and written and 'overwriteMeasures' = false, then this level 
+% will be skipped.
+%
+% The measurement pipeline also includes an automated disc construction
+% process that models the IVD as the empty space in between the inferior
+% and superior vertebrae. These discs geometry will be created and exported
+% into stl files onto 'discPath'. If 'overwriteDiscExports' = false, then
+% disc levels that have already been exported will be skipped.
+overwriteMeasures = true;
+overwriteDiscExports = true;
+
+%% DISC CONSTRUCTION PROCESS
+% [Under construction]
+

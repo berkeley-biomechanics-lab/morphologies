@@ -19,7 +19,7 @@ clc; % clearing command window
 varsbefore = who;
 
 %% CHECKING MEASUREDLEVELS VARIABLE AND GETTING DESIRED VERTEBRA LEVELS
-% checking to see if the user-defined 'measuredLevels' variable has been
+% Checking to see if the user-defined 'measuredLevels' variable has been
 % defined appropriately, valid formats of 'measuredLevels' include:
 %       1) "all"
 %       2) "L1 - L6"         (range)
@@ -30,7 +30,7 @@ varsbefore = who;
 selectedLevels = getLevelSelection(measuredLevels, allLevelNames);
 
 %% CHECKING MEASUREDSUBJECTS VARIABLE AND GETTING DESIRED SUBJECTS
-% checking to see if the user-defined 'measuredSubjects' variable has been
+% Ohecking to see if the user-defined 'measuredSubjects' variable has been
 % defined appropriately, valid formats of 'measuredSubjects' include:
 %       1) "all"
 %       3) ["643", "666", "717", ...]   (list)
@@ -40,12 +40,12 @@ selectedLevels = getLevelSelection(measuredLevels, allLevelNames);
 selectedSubjects = getSubjectSelection(measuredSubjects, allSubjectNames);
 
 %% SETTING DATA OF VERTEBRA LEVEL PROPERTIES FOR EACH SUBJECT
-% organizing vertebral datas and constructing 'subject' data struct 
+% Organizing vertebral datas and constructing 'subject' data struct 
 
 % Getting array of vertebral data structs, one per subject, in 
 % 'vertebraSTLData' and string array of selected subject names in
 % 'subjectNames':
-[vertebraSTLData, subjectNames] = getVertebraSTLInformation(vertPath, ...
+[vertebraData, subjectNames] = getVertebraInformation(vertPath, ...
                                                     selectedSubjects, ...
                                                     selectedLevels);
 
@@ -59,19 +59,31 @@ subject = struct('name', num2cell(subjectNames), ...
 
 % Storing vertebral data in the 'subject' structure:
 for i = 1:length(subject)
-    subject(i).vertebrae = vertebraSTLData(i).vertebrae;
+    subject(i).vertebrae = vertebraData(i).vertebrae;
 end
 
 %% SETTING DATA OF DISC LEVEL PROPERTIES FOR EACH SUBJECT
-% organizing disc datas and appending to 'subject' data struct 
+% Organizing disc datas and file infrastructures and appending new 
+% information to 'subject' data struct
 
-% UNDER CONSTRUCTION -->
-% [develop procedure that automates filling in the file path locations for
-% the disc files. Disc file paths can be deterministically
-% found based on the vertebrae files.]
+% Writing paths of subject name directories onto 'discPath' and skipping if
+% subject repo already exists:
+for s = subjectNames
+    folderPath = fullfile(discPath, s);
+    if ~exist(folderPath, "dir")
+        mkdir(folderPath);
+    end
+end
 
-%% MATLAB cleanup
+% Working on storing disc data:
+discData = getDiscInformation(discPath, vertebraData, allLevelNames);
 
+% Storing vertebral data in the 'subject' structure:
+for i = 1:length(subject)
+    subject(i).discs = discData(i).discs;
+end
+
+%% MATLAB CLEANUP
 % Deleting extraneous subroutine variables:
 varsafter = who; % get names of all variables in 'varsbefore' plus variables
 varsremove = setdiff(varsafter, varsbefore); % variables  defined in the script

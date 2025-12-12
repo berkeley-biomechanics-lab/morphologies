@@ -1,4 +1,11 @@
 function selectedSubjects = getSubjectSelection(measuredSubjects, subjectNames)
+% checking to see if the user-defined 'measuredSubjects' variable has been
+% defined appropriately, valid formats of 'measuredSubjects' include:
+%       1) "all"                        (all availible subjects)
+%       3) ["643", "666", "717", ...]   (list)
+%
+% returns 'selectedSubjects', a formatted string array of the to-be-processed
+% subjects given the user settings of 'measuredSubjects'
 
     % ---- OPTION 1: "all" ----
     if ischar(measuredSubjects) || (isstring(measuredSubjects) && isscalar(measuredSubjects))
