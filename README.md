@@ -34,12 +34,12 @@ git clone https://github.com/YousufAbubakr/morphologies.git
  ┃ ┣ 📂vert-utils            ← utility functions related to vertebra morphology processing
  ┃ ┣ 📜main.m                ← end-to-end workflow program for processing vertebral and disc morphology data
  ┣ 📂stl-geometries          ← source .stl geometry data
- ┃ ┣ 📂disc-stls
+ ┃ ┣ 📂disc-stls             ← automated disc construction process in pipeline
  ┃ ┃ ┣ 📂Subject A
  ┃ ┃ ┃ ┣ 📜L1-L2.stl
  ┃ ┃ ┃ ┣ 📜L2-L3.stl
  ┃ ┃ ┃ ┣ ...
- ┃ ┣ 📂vertebra-stls
+ ┃ ┣ 📂vertebra-stls         ← imported from manual 3D slicer segmentations
  ┃ ┃ ┣ 📂Subject A
  ┃ ┃ ┃ ┣ 📜L1.stl
  ┃ ┃ ┃ ┣ 📜L2.stl

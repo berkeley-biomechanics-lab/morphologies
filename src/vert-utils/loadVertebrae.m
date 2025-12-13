@@ -1,40 +1,63 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Grace O'Connell Biomechanics Lab, UC Berkeley Department of Mechanical
 % Engineering - Etchverry 2162
 %
-% Given the subject name and vertebra level, this program loads the
-% appropriate .stl file and then extracts and centers its geometry data.
+% File: loadVertebrae.m
+% Author: Yousuf Abubakr
+% Project: Morphologies
+% Last Updated: 12-12-2025
 %
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Description: loading and characterizing stl properties from the vertebral
+% body mesh geometries 
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% script variables:
+clc; % clearing command window
+
+% Getting workspace variables at the start of the new script:
 varsbefore = who;
 
-%% STL processing
+%% VERTEBRA STL METADATA PROCESSING
+% Loading mesh data into 'subjectData'
 
-% getting path of .stl file:
-stlPath = filePath;
+n = length(subjectData.subject); % number of subjects
 
-% opening .stl file:
-TR = stlread(stlPath); % returns triangulation object containing the triangles defined in STL file
-model.vertices = TR.Points; % initializing 'model' object
-model.faces = TR.ConnectivityList;
-P = TR.Points; % size = [np, 3]
+% Looping through each subject's '.vertebrae' field and appending mesh
+% metadata:
+for i = 1:n
 
-% centering:
-c = mean(P); % size = [1, 3]
-Pc = P - c; % size = [np, 3]
+    % Getting ith subject's vertebra collection data:
+    v = subjectData.subject(i).vertebrae;
+    subjectName = subjectData.subject(i).name;
 
-% defining c1 translation vector:
-c1 = c;
+    % Getting level paths and names of ith subject's vertebrae:
+    levelPaths = v.levelPaths;
+    levelNames = v.levelNames;
 
-%% MATLAB cleanup
+    % Extracting mesh properties of ith subject's vertebrae:
+    meshes = loadSTLCollection(levelPaths, levelNames, subjectName);
 
-% deleting everything except Pc and model:
+    % Appending metadata into 'subjectData'
+    subjectData.subject(i).vertebrae.mesh = meshes;
+end
+
+%% VISUALIZATION
+% Plotting each subjects' vertebral bodies
+
+% Skipping visualization if 'showSubjectVertebrae' = false:
+if showSubjectVertebrae
+    % Looping through each subject:
+    for j = 1:n
+        % Plotting all vertebra meshes for a single subject:
+        plotSubjectVertebrae(subjectData.subject(j));
+    end
+end
+
+%% MATLAB CLEANUP
+% Deleting extraneous subroutine variables:
 varsafter = who; % get names of all variables in 'varsbefore' plus variables
 varsremove = setdiff(varsafter, varsbefore); % variables  defined in the script
-varskeep = {'Pc', 'model', 'c1', 'P'};
+varskeep = {''};
 varsremove(ismember(varsremove, varskeep)) = {''};
 clear(varsremove{:})
-
 

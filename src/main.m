@@ -5,7 +5,7 @@
 % File: main.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-11-2025
+% Last Updated: 12-12-2025
 %
 % Description: main pipeline for spinal morphology measurement project
 %
@@ -14,7 +14,7 @@
 clear; clc; % clearing command window and workspace variables
 
 set(0,'DefaultFigureWindowStyle','docked') % docking figures
-warning('off','all') % turning off warnings
+warning('on','all') % turning on warnings
 
 format compact; % suppressing blank lines and decreasing spacing in the CW
 
@@ -147,6 +147,21 @@ subjectData = struct('numSubjects', numSubjects, ...
                         'numKyphoticSubjects', numKyphoticSubjects, ...
                         'numControlSubjects', numControlSubjects, ...
                         'subject', subject);
+
+%% VERTEBRAL GEOMETRY MESH PROPERTIES
+% Appending vertebral body geometry mesh features into the 'subjectData'
+% data structure like so:
+%       subjectData.subject(i).vertebrae.mesh(j)
+%             ┣ mesh(j).TR = TR
+%             ┣ mesh(j).numVertices = size(TR.Points, 1);
+%             ┣ mesh(j).numFaces = size(TR.ConnectivityList, 1);
+%             ┣ mesh(j).isWatertight = isempty(freeBoundary(TR));
+%             ┣ mesh(j).centroid = [X, Y, Z];
+%             ┣ ...
+
+% Plotting and loading vertebral body mesh features into 'subjectData':
+showSubjectVertebrae = false; % if 'false', mesh plots will be skipped
+loadVertebrae; % appends mesh metadata into 'subjectData'
 
 %% OVERWRITE PROPERTIES
 % The user must also specify whether or not they wish to overwrite the
