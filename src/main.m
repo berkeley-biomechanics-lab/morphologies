@@ -62,6 +62,7 @@ addpath(genUtilPath, vertUtilPath, discUtilPath);
 %                       ┣ .vertebrae.levelNames = ["Lvl1", "Lvl2", ...]
 %                       ┣ .vertebrae.levelPaths = ["pathtoLvl1", "pathtoLvl2", ...]
 %                       ┣ .vertebrae.numLevels = X
+%                       ┣ ...
 %                       ┣ .vertebrae.measurements
 %                                   ┣ .measurements.csas
 %                                   ┣ .measurements.heights
@@ -71,6 +72,7 @@ addpath(genUtilPath, vertUtilPath, discUtilPath);
 %                       ┣ .discs.levelNames = ["Lvl1", "Lvl2", ...]
 %                       ┣ .discs.levelPaths = ["pathtoLvl1", "pathtoLvl2", ...]
 %                       ┣ .discs.numLevels = Y
+%                       ┣ ...
 %                       ┣ .discs.measurements
 %                               ┣ .measurements.csas
 %                               ┣ .measurements.heights
