@@ -1,22 +1,31 @@
-function endplate = extractEndplate(mesh, side, pct)
+function endplate = extractEndplate(mesh, which, pct)
 % extracting the endplate datapoints from the "superior" and "inferior"
 % vertebral meshes. 
 
-    Z = mesh.TR.Points(:,3);
+    V = mesh.TR.Points;
+    F = mesh.TR.ConnectivityList;
+    c = mesh.centroid(:)';
+    n = mesh.frame.SI(:)';   % SI unit vector
 
-    switch side
-        case "superior"
-            zCut = prctile(Z, 100 - pct);
-            idx = Z >= zCut;
+    % Project vertices onto SI axis
+    s = (V-c) * n';
 
-        case "inferior"
-            zCut = prctile(Z, pct);
-            idx = Z <= zCut;
-
+    switch lower(which)
+        case 'sup'
+            sCut = prctile(s, 100 - pct);
+            idx = s >= sCut;
+        case 'inf'
+            sCut = prctile(s, pct);
+            idx = s <= sCut;
         otherwise
-            error("Side must be 'superior' or 'inferior'");
+            error('which must be "sup" or "inf"');
     end
 
-    endplate.Points = mesh.TR.Points(idx,:);
+    % Keep faces whose vertices all lie in the slab
+    faceMask = all(idx(F), 2);
+
+    % Build endplate mesh
+    endplate.Points = V(idx,:);
+    endplate.ConnectivityList = F(faceMask,:);
 end
 

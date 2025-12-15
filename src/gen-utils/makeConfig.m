@@ -4,7 +4,7 @@ function cfg = makeConfig()
     % -------------------------------
     % Disc construction parameters
     % -------------------------------
-    cfg.disc.endplatePercentile = 5;        % top/bottom % of vertebra
+    cfg.disc.endplatePercentile = 15;        % top/bottom % of vertebra
     cfg.disc.loftMethod         = "linear"; % "linear" | "pca"
     cfg.disc.numLoftSlices      = 25;
 
@@ -12,6 +12,7 @@ function cfg = makeConfig()
     % Plotting
     % -------------------------------
     cfg.plot.showSubjectVertebrae = false; % if 'false', vertebra mesh plots will be skipped
+    cfg.plot.showDiscEndplatePoints = true;
 
 end
 
