@@ -6,8 +6,8 @@ function centerline = computeSpineCenterline(vertebrae)
 %
 % OUTPUT:
 %   centerline.ppX, ppY, ppZ     spline representations
-%   centerline.C                original centroids
-%   centerline.t                normalized arc-length parameter
+%   centerline.C                 original centroids
+%   centerline.t                 normalized arc-length parameter
 
     % -------------------------------------------------
     % Extract centroids (assumed anatomical order)
