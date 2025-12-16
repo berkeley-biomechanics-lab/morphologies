@@ -31,7 +31,7 @@ function centerline = computeSpineCenterline(vertebrae)
     % -------------------------------------------------
     % Store metadata
     % -------------------------------------------------
-    centerline.CVert = C;
-    centerline.tVert = t; % t values (@ vertebra centroids)
+    centerline.vertebrae.C = C;
+    centerline.vertebrae.t = t; % t values (@ vertebra centroids)
 end
 

@@ -2,13 +2,14 @@
 % Grace O'Connell Biomechanics Lab, UC Berkeley Department of Mechanical
 % Engineering - Etchverry 2162
 %
-% File: loadVertebrae.m
+% File: loadGeometryMetadata.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
 % Last Updated: 12-16-2025
 %
 % Description: loading and characterizing stl properties from the vertebral
-% body mesh geometries 
+% body mesh geometries and describing vertebral, discal, and centerline
+% features
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -47,7 +48,7 @@ end
 n = length(subjectData.subject); % number of subjects
 
 % Looping through each subject's '.vertebrae.mesh' field and appending
-% centerline spline properties:
+% centerline spline properties into 'subject(i).centerline':
 for i = 1:n
     % Computing a smooth spinal centerline from vertebral centroids:
     subjectData.subject(i).centerline = ...
@@ -55,20 +56,25 @@ for i = 1:n
 end
 
 % Secondary loop to compute centerline tangent properties at each vertebral
-% centroid:
+% centroid and appending into 'subject(i).centerline':
 for i = 1:n
     % Computing unit tangent at subject i's vertebral centroids:
-    subjectData.subject(i) = ...
-            computeCenterlineTangents(subjectData.subject(i));
+    subjectData.subject(i).centerline = ...
+            computeCenterlineTangents(subjectData.subject(i).centerline);
 end
+
+%% DISC SPINE METADATA PROCESSING
+% Loading subjects' disc data into 'subjectData'
+
+
 
 %% VISUALIZATION
 % Plotting each subjects' vertebral bodies
 
-showSubjectVertebrae = cfg.plot.showSubjectVertebrae; % getting config settings
+showGeometryMetadata = cfg.plot.showGeometryMetadata; % getting config settings
 
 % Skipping visualization if 'showSubjectVertebrae' = false:
-if showSubjectVertebrae
+if showGeometryMetadata
     % Looping through each subject:
     for j = 1:n
         % Plotting all vertebra meshes for a single subject:

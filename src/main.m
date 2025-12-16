@@ -5,7 +5,7 @@
 % File: main.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-14-2025
+% Last Updated: 12-16-2025
 %
 % Description: main pipeline for spinal morphology measurement project
 %
@@ -119,7 +119,7 @@ measuredLevels = "all";
 %           2.) Measure specific subjects: ["643", "666", "717", ...]
 % Default settings will be:
 %       --> Subjects: "all"
-measuredSubjects = "all";
+measuredSubjects = "765";
 
 % Notes about pipeline data structure:
 %    --> 'subjectData' is the parent struct and 'subject' is the child
@@ -156,19 +156,12 @@ subjectData = struct('numSubjects', numSubjects, ...
 cfg = makeConfig();
 validateConfig(cfg)
 
-%% VERTEBRAL GEOMETRY MESH PROPERTIES
-% Appending vertebral body geometry mesh features into the 'subjectData'
-% data structure like so:
-%       subjectData.subject(i).vertebrae.mesh(j)
-%             ┣ mesh(j).TR = TR
-%             ┣ mesh(j).numVertices = size(TR.Points, 1);
-%             ┣ mesh(j).numFaces = size(TR.ConnectivityList, 1);
-%             ┣ mesh(j).isWatertight = isempty(freeBoundary(TR));
-%             ┣ mesh(j).centroid = [X, Y, Z];
-%             ┣ ...
+%% GEOMETRY PROPERTIES
+% Appending vertebral body, disc, and centerline geometry features into 
+% 'subjectData' data structure
 
 % Plotting and loading vertebral body mesh features into 'subjectData':
-loadVertebrae; % appends mesh metadata into 'subjectData'
+loadGeometryMetadata; % appends mesh metadata into 'subjectData'
 
 %% OVERWRITE PROPERTIES
 % The user must also specify whether or not they wish to overwrite the

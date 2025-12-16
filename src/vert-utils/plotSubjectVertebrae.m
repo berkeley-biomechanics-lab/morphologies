@@ -12,8 +12,8 @@ function plotSubjectVertebrae(subject)
     camlight headlight;
     view(3);
 
-    C = subject.centerline.CVert;
-    T = subject.centerline.TVert;
+    C = subject.centerline.vertebrae.C;
+    T = subject.centerline.vertebrae.T;
 
     meshes = subject.vertebrae.mesh;
     cmap = lines(numel(meshes));

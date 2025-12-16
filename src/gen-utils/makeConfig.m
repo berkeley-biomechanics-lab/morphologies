@@ -9,9 +9,9 @@ function cfg = makeConfig()
     cfg.disc.numLoftSlices      = 25;
 
     % -------------------------------
-    % Plotting
+    % Plotting (if 'false', plots will be skipped)
     % -------------------------------
-    cfg.plot.showSubjectVertebrae = false; % if 'false', vertebra mesh plots will be skipped
+    cfg.plot.showGeometryMetadata = true;
     cfg.plot.showDiscEndplatePoints = true;
 
 end
