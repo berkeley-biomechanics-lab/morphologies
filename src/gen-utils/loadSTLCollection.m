@@ -7,6 +7,7 @@ function meshes = loadSTLCollection(levelPaths, levelNames, subjectName)
 %
 % Output:
 %   meshes (1×N struct) with fields:
+%       .subjName
 %       .levelName
 %       .TR
 %       .centroid
@@ -23,6 +24,7 @@ function meshes = loadSTLCollection(levelPaths, levelNames, subjectName)
 
     % Preallocate struct array
     meshes(n) = struct( ...
+        'subjName', "", ...
         'levelName', "", ...
         'TR', [], ...
         'centroid', [], ...
@@ -33,6 +35,7 @@ function meshes = loadSTLCollection(levelPaths, levelNames, subjectName)
     for k = 1:n
         TR = stlread(levelPaths(k));
 
+        meshes(k).subjName     = subjectName;
         meshes(k).levelName    = levelNames(k);
         meshes(k).TR           = TR;
         meshes(k).centroid     = mean(TR.Points, 1);

@@ -5,7 +5,7 @@
 % File: main.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-16-2025
+% Last Updated: 12-19-2025
 %
 % Description: main pipeline for spinal morphology measurement project
 %
@@ -161,35 +161,26 @@ validateConfig(cfg)
 % 'subjectData' data structure
 
 % Plotting and loading vertebral body mesh features into 'subjectData':
-loadGeometryMetadata; % appends mesh metadata into 'subjectData'
-
-%% OVERWRITE PROPERTIES
-% The user must also specify whether or not they wish to overwrite the
-% measurement process with the boolean variable 'overwriteMeasures'. This 
-% means if the measurements for a particular level have already been made,
-% processed, and written and 'overwriteMeasures' = false, then this level 
-% will be skipped.
-%
-% The measurement pipeline also includes an automated disc construction
-% process that models the IVD as the empty space in between the inferior
-% and superior vertebrae. These discs geometry will be created and exported
-% into stl files onto 'discPath'. If 'overwriteDiscExports' = false, then
-% disc levels that have already been exported will be skipped.
-overwriteMeasures = true;
-overwriteDiscExports = true;
+loadGeometryMetadata; % appends geometry and centerline metadata into 'subjectData'
 
 %% DISC CONSTRUCTION PROCESS
 % Now that all of the vertebral geometry has been processed and the
 % preliminary discal information has been appended into 'subjectData', the
 % pipeline will proceed to automatically constructing the disc geometries
 % between all of the adjacent vertebral body layers. The pipeline will
-% create these disc geometries in a two-step process:
+% create these disc geometries in a three-step process:
 %       1.) Endplate extraction: characterizing the geometries of the 
 %           superior and inferior surfaces of the discs based on its two 
 %           adjacent vertebral bodies.
 %       2.) Surface lofting: connecting the endplate geometries to form a
-%           closed disc volume
+%           closed disc volume.
+%       3.) Stitching and triangulation: stitching the endplate and 
+%           interior surfaces together.
 
-% Constructing discs from vertebrae:
-constructDiscs;
+% Constructing and exporting disc geometries via an endplate extraction → 
+% surface lofting → stitching pipeline:
+constructDiscs; % appends disc metadata into 'subjectData'
 
+%% ALIGNMENT
+
+%% MEASUREMENTS

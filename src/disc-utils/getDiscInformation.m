@@ -25,8 +25,6 @@ function discData = getDiscInformation(discPath, vertebraData, allLevelNames)
         discNames = strings(0,1);
         supVertNames = strings(0,1); % superior vertebrae relative to disc, i.e. disc = "T6-T7", sup vert = "T6"
         infVertNames = strings(0,1); % inferior vertebrae relative to disc, i.e. disc = "T6-T7", sup vert = "T7"
-        supVertPaths = strings(0,1); % superior vertebra paths
-        infVertPaths = strings(0,1); % inferior vertebra paths
         for k = 1:numel(idx)-1
             if idx(k+1) == idx(k) + 1
                 % These two vertebrae are properly adjacent → valid disc
@@ -35,10 +33,6 @@ function discData = getDiscInformation(discPath, vertebraData, allLevelNames)
                 % Storing superior and inferior vertebrae names:
                 supVertNames(end+1,1) = vertebraNames(k);
                 infVertNames(end+1,1) = vertebraNames(k+1);
-
-                % Storing superior and inferior vertebrae paths:
-                supVertPaths(end+1,1) = vertebraPaths(k);
-                infVertPaths(end+1,1) = vertebraPaths(k+1);
             end
         end
 
@@ -57,8 +51,6 @@ function discData = getDiscInformation(discPath, vertebraData, allLevelNames)
 
         discData(i).discs.supVertNames = supVertNames';
         discData(i).discs.infVertNames = infVertNames';
-        discData(i).discs.supVertPaths = supVertPaths';
-        discData(i).discs.infVertPaths = infVertPaths';
     end
 end
 

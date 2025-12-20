@@ -73,8 +73,8 @@ function [vertebraData, selectedSubjectsCopy] = getVertebraInformation(vertPath,
         if ~isempty(diffLevels)
             if (numel(diffLevelsSorted) == numel(selectedLevels)) && ...
                     (all(diffLevelsSorted == selectedLevels))
-                error("Invalid level selection format. None of the selected " + ...
-                            "levels are in the vertebral geometry subject path!");
+                error("Invalid level selection format. At least one of the selected " + ...
+                            "levels are NOT stored in a subject's vertebral geometry path!");
             else
                 overlapMask = ismember(selectedLevelsCopy, diffLevelsSorted);
                 selectedLevelsCopy(overlapMask) = [];

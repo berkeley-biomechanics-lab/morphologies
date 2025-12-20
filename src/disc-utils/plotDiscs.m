@@ -1,28 +1,29 @@
-function plotSubject(subject)
-% Visualizing subject geometric properties
+function plotDiscs(subject)
+% Visualizing subject disc properties
 
     figure;
-    sgtitle("Subject " + subject.vertebrae.subjName + " Visualization");
-    ax1 = subplot(3,8,[1 19]); ax1.SortMethod = 'childorder';
+    sgtitle("Subject " + subject.discs.subjName + " Visualization");
+
+    ax1 = subplot(3,7,[1 17]); ax1.SortMethod = 'childorder';
     hold on; axis equal;
-    title("Vertebral body meshes","Interpreter","none");
+    title("Discal body meshes","Interpreter","none");
     xlabel('X'); ylabel('Y'); zlabel('Z')
 
     lighting gouraud;
     camlight headlight;
     view(3);
 
-    C = subject.centerline.vertebrae.C;
-    T = subject.centerline.vertebrae.T;
+    CDisc = subject.centerline.discs.C;
+    TDisc = subject.centerline.discs.T;
 
-    meshes = subject.vertebrae.mesh;
+    meshes = subject.discs.mesh;
     cmap = lines(numel(meshes));
 
     for k = 1:numel(meshes)
         TR = meshes(k).TR;
 
         % -------------------------------------------------
-        % Plot vertebral meshes
+        % Plot discal meshes
         % -------------------------------------------------
         trisurf(TR.ConnectivityList, ...
                 TR.Points(:,1), ...
@@ -35,25 +36,25 @@ function plotSubject(subject)
     % -------------------------------------------------
     % Plot centroids
     % -------------------------------------------------  
-    c = vertcat(meshes.centroid);
-    n = vertcat(meshes.levelName);
-    plot3(c(:,1), c(:,2), c(:,3), 'k.', 'MarkerSize', 15);
-    text(c(:,1), c(:,2), c(:,3), n, ...
+    cVert = subject.centerline.discs.C;
+    nVert = subject.centerline.discs.levelNames;
+    plot3(cVert(:,1), cVert(:,2), cVert(:,3), 'k.', 'MarkerSize', 15);
+    text(cVert(:,1), cVert(:,2), cVert(:,3), nVert, ...
                             'FontSize', 14, ...
                             'FontWeight', 'bold');
 
-    subplot(3,8,[4 22])
+    subplot(3,7,[4 20])
     hold on; axis equal; view(3);
-    title("Vertebral centerline and tangents","Interpreter","none");
+    title("Discal centerline and tangents","Interpreter","none");
     xlabel('X'); ylabel('Y'); zlabel('Z')
 
     % ----------------------------------------------------------
-    % Plot centerline tangents (stored collectively in C and T)
+    % Plot vertebra centerline + tangents (stored collectively in C and T)
     % ----------------------------------------------------------
     scale = 0.3;
     quiver3( ...
-        C(:,1), C(:,2), C(:,3), ...
-        T(:,1), T(:,2), T(:,3), ...
+        CDisc(:,1), CDisc(:,2), CDisc(:,3), ...
+        TDisc(:,1), TDisc(:,2), TDisc(:,3), ...
             scale,'Color',[0.5 0 0], ...
             'LineWidth',2, ...
             'MaxHeadSize',0.5);
@@ -61,8 +62,8 @@ function plotSubject(subject)
     % -------------------------------------------------
     % Plot centroids
     % -------------------------------------------------  
-    plot3(c(:,1), c(:,2), c(:,3), 'k.', 'MarkerSize', 15);
-    text(c(:,1), c(:,2), c(:,3), n, ...
+    plot3(cVert(:,1), cVert(:,2), cVert(:,3), 'k.', 'MarkerSize', 15);
+    text(cVert(:,1), cVert(:,2), cVert(:,3), nVert, ...
                             'FontSize', 14, ...
                             'FontWeight', 'bold');
 
@@ -81,19 +82,19 @@ function plotSubject(subject)
     % -------------------------------------------------
     % Plot 2D centerline projections
     % -------------------------------------------------
-    subplot(3,8,[7 8])
+    subplot(3,7,7)
     hold on; axis equal;
     title("Sagittal centerline projection (YZ)","Interpreter","none");
     xlabel('Y'); ylabel('Z');
     plot(y, z, 'r-', 'LineWidth',3)
 
-    subplot(3,8,[15 16])
+    subplot(3,7,14)
     hold on; axis equal;
-    title("Coronal centerline projection (XZ)","Interpreter","none");
+    title("Frontal centerline projection (XZ)","Interpreter","none");
     xlabel('X'); ylabel('Z');
     plot(x, z, 'r-', 'LineWidth',3)
 
-    subplot(3,8,[23 24])
+    subplot(3,7,21)
     hold on; axis equal;
     title("Transverse centerline projection (XY)","Interpreter","none");
     xlabel('X'); ylabel('Y');

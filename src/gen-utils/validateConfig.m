@@ -5,11 +5,8 @@ function validateConfig(cfg)
         cfg struct
     end
 
-    assert(cfg.disc.endplatePercentile > 0 && cfg.disc.endplatePercentile < 50, ...
-        'Endplate percentile must be between 0 and 50.');
-
-    assert(cfg.disc.numLoftSlices >= 5, ...
-        'numLoftSlices must be >= 5.');
+    assert(cfg.disc.alpha > 0 && cfg.disc.alpha < 50, ...
+        'Endplate % of vertebral height must be between 0 and 50.');
 
 end
 
