@@ -5,7 +5,7 @@
 % File: main.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-20-2025
+% Last Updated: 12-23-2025
 %
 % Description: main pipeline for spinal morphology measurement project
 %
@@ -43,9 +43,14 @@ discUtilPath = fullfile(srcPath, discUtilsDir); % disc geometry path
 % Adding paths of utility functions:
 addpath(genUtilPath, vertUtilPath, discUtilPath);
 
+%% PIPELINE CONFIGURATION
+% Instead of scattering parameters across scripts, we can define them once
+% and 'cfg' can be passed anywhere:
+cfg = makeConfig();
+validateConfig(cfg)
+
 %% SUBJECT INFORMATION
 % Initializing the porcine subject data structure
- 
 % 'subjectData' is a struct that stores the necessary data associated
 % with the study, including the # of subjects, # of kyphotic subjects,
 % # of control subjects, etc. It also includes the 'subject' struct array
@@ -78,49 +83,7 @@ addpath(genUtilPath, vertUtilPath, discUtilPath);
 %                               ┣ .measurements.heights
 %                               ┣ .measurements.volumes
 %                               ┣ ...
-% Before intializing the 'subject' data structure, we must manually provide
-% some information to get us started. ASSUMPTION: the data is structured 
-% such that each subject has a unique 3-digit name and kyphotic state 
-% associated with it. Therefore, we classify these subjects' datas here:
-allSubjectNames = ["643", "658", "660", "665", "666", "717", "723", ...
-                        "735", "743", "764", "765", "766", "778", "779"];
-allSubjectStates = [false, true, true, true, true, false, false, ...
-                        true, false, true, true, true, false, false];
-allLevelNames = ["T1", "T2", "T3", "T4", "T5", "T6", "T7", ...
-                    "T8", "T9", "T10", "T11", "T12", "T13", "T14", ...
-                    "T15", "L1", "L2", "L3", "L4", "L5", "L6"];
-
-% Subject name --> subject state dictionary object:
-subjectDict = dictionary(allSubjectNames, allSubjectStates);
-
-% Next, we wish to classify which of the availible vertebra levels we'd
-% like to involve in the measurement pipeline. It is assumed that each
-% porcine subject has a maximum of 21-segmentable levels (15 thoracic and 6 
-% lumbar), of which >= 21 are available in the 'vertPath' directory. The
-% user must define which of the 21 levels they would like to measure in the
-% following three formatting options:
-%           1.) Measure all levels: "all"
-%           2.) Measure levels that lie in a certain interval:
-%                   "[upper level] - [lower level]" (Example: "L1 - L6")
-%           3.) Measure specific levels: ["T2", "T5", "T10", ...]
-% The selection of vertebra levels will also determine the selection of
-% disc levels. For example, if the vertebra levels "L1 - L6" are chosen,
-% then the associated disc levels to be processed are "L1-L2 - L5-L6".
 %
-% Default settings will be:
-%       --> Levels: "all"
-measuredLevels = "all";
-
-% By the same token, we wish to classify which of the availible subjects
-% we'd like to involve in the measurement pipeline. The user must define
-% which of the subjects from 'subjectNames' they would like to measure in 
-% the following two formatting options:
-%           1.) Measure all subjects: "all"
-%           2.) Measure specific subjects: ["643", "666", "717", ...]
-% Default settings will be:
-%       --> Subjects: "all"
-measuredSubjects = "all";
-
 % Notes about pipeline data structure:
 %    --> 'subjectData' is the parent struct and 'subject' is the child
 %        struct
@@ -138,23 +101,7 @@ measuredSubjects = "all";
 % levels associated with each subjects' vertebrae and discs given the
 % user-defined settings and append this information into 'subjects' using
 % the following subroutine:
-setSubjectInformation; % returns 'subject', 'subjectStates'
-
-% Contructing 'subjectData' struct with global subject properties and
-% already-contructed 'subject' struct:
-numSubjects = length(subject); % number of porcine subjects
-numKyphoticSubjects = sum(subjectStates); % number of kyphotic porcine subjects
-numControlSubjects = sum(~subjectStates); % number of control porcine subjects
-subjectData = struct('numSubjects', numSubjects, ...
-                        'numKyphoticSubjects', numKyphoticSubjects, ...
-                        'numControlSubjects', numControlSubjects, ...
-                        'subject', subject);
-
-%% PIPELINE CONFIGURATION
-% Instead of scattering parameters across scripts, we can define them once
-% and 'cfg' can be passed anywhere:
-cfg = makeConfig();
-validateConfig(cfg)
+setSubjectInformation; % constructs and initializes 'subjectData' data structure
 
 %% GEOMETRY PROPERTIES
 % Appending vertebral body, disc, and centerline geometry features into 

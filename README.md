@@ -47,3 +47,6 @@ git clone https://github.com/YousufAbubakr/morphologies.git
  ┣ 📜.gitattributes          ← to ignore large / binary / generated files
  ┗ 📜README.md               ← project overview, how to run, etc.
 ```
+
+## Notes to Consider
+This repository is almost entirely self-contained in that all the files required for this workflow are located inside of these folders. The only files that aren't included are the 3D Slicer segmentation files that were used to develop the vertebrae geometry stls. These files are of considerable size and are stored elsewhere. Feel free to reach out to Yousuf Abubakr at yousufabubakr123@berkeley.edu if interested in obtaining these files.

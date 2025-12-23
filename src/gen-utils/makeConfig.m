@@ -2,9 +2,15 @@ function cfg = makeConfig()
 % Creating a config builder function
 
     % -------------------------------
+    % Subject information
+    % -------------------------------
+    cfg.subjects.measuredLevels = "all";
+    cfg.subjects.measuredSubjects = "all";
+
+    % -------------------------------
     % Disc construction parameters
     % -------------------------------
-    cfg.disc.alreadyMade = true; % if 'true', then disc construction will be skipped
+    cfg.disc.alreadyMade = true; % if 'true', then disc construction will be skipped altogether
 
     % geometric tolerances used to isolate the endplate surface near the 
     % extremum of the signed-distance field:
@@ -20,7 +26,7 @@ function cfg = makeConfig()
     % Plotting (if 'false', plots will be skipped)
     % -------------------------------------------------
     cfg.plot.showGeometryMetadata = false;
-    cfg.plot.monitorDiscEndplates = false;
+    cfg.plot.monitorDiscEndplates = false; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
     cfg.plot.showDiscMetadata = false;
 
     % -------------------------------
@@ -38,6 +44,6 @@ function cfg = makeConfig()
     % into stl files onto 'discPath'. If 'exports' = false, then disc 
     % levels that have already been exported will be skipped.
     cfg.overwrite.measures = true;
-    cfg.overwrite.discExports = false;
+    cfg.overwrite.discExports = false; % if '.alreadyMade' = true, then '.discExports' will be skipped
 end
 
