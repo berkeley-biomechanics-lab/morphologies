@@ -51,6 +51,7 @@ validateConfig(cfg)
 
 %% SUBJECT INFORMATION
 % Initializing the porcine subject data structure
+
 % 'subjectData' is a struct that stores the necessary data associated
 % with the study, including the # of subjects, # of kyphotic subjects,
 % # of control subjects, etc. It also includes the 'subject' struct array
@@ -83,7 +84,6 @@ validateConfig(cfg)
 %                               ┣ .measurements.heights
 %                               ┣ .measurements.volumes
 %                               ┣ ...
-%
 % Notes about pipeline data structure:
 %    --> 'subjectData' is the parent struct and 'subject' is the child
 %        struct
@@ -130,5 +130,11 @@ loadGeometryMetadata; % appends geometry and centerline metadata into 'subjectDa
 constructDiscs; % appends disc metadata into 'subjectData'
 
 %% ALIGNMENT
+% Centering and rotating the geometric bodies into a common Cartesian 
+% coordinate frame defined by the standard orthonormal basis
+
+% Aligning the vertebral bodies and discs to a common reference frame:
+alignGeometries; % appends alignment metadata into 'subjectData'
 
 %% MEASUREMENTS
+

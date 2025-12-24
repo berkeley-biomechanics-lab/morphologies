@@ -5,7 +5,7 @@
 % File: loadGeometryMetadata.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-16-2025
+% Last Updated: 12-23-2025
 %
 % Description: loading and characterizing stl properties from the vertebral
 % body mesh geometries and describing vertebral, discal, and centerline
@@ -21,7 +21,7 @@ varsbefore = who;
 %% VERTEBRA STL METADATA PROCESSING
 % Loading subjects' *vertebral mesh* data into 'subjectData'
 
-n = length(subjectData.subject); % number of subjects
+n = subjectData.numSubjects; % number of subjects
 
 % Looping through each subject's '.vertebrae' field and appending mesh
 % metadata:
@@ -45,8 +45,6 @@ end
 %% SUBJECT SPINE METADATA PROCESSING
 % Loading subjects' *centerline* data into 'subjectData'
 
-n = length(subjectData.subject); % number of subjects
-
 % Looping through each subject's '.vertebrae.mesh' field and appending
 % centerline spline properties into 'subject(i).centerline':
 for i = 1:n
@@ -65,8 +63,6 @@ end
 
 %% DISC SPINE METADATA PROCESSING
 % Loading subjects' *disc* data into 'subjectData'
-
-n = length(subjectData.subject); % number of subjects
 
 % Looping through each subject and appending disc centerline spline 
 % properties into 'subject(i).centerline':

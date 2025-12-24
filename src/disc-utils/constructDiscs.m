@@ -5,7 +5,7 @@
 % File: constructDiscs.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-20-2025
+% Last Updated: 12-23-2025
 %
 % Description: constructing and exporting disc geometries via an endplate 
 % extraction → surface lofting → stitching pipeline
@@ -20,7 +20,7 @@ varsbefore = who;
 %% DISC STL CONSTRUCTION
 % Loading mesh data into 'subjectData'
 
-n = length(subjectData.subject); % number of subjects
+n = subjectData.numSubjects; % number of subjects
 
 % If 'true', then disc construction will be skipped:
 alreadyMade = cfg.disc.alreadyMade;
@@ -109,6 +109,7 @@ if ~alreadyMade
     
             % Monitoring disc construction process:
             monitorDiscEndplates = cfg.plot.monitorDiscEndplates; % getting config settings
+            
             if monitorDiscEndplates
                 % reusing figure for disc-by-disc construction process:
                 if ~exist('constructionfig','var') || ~ishandle(constructionfig)
@@ -134,8 +135,6 @@ end
 % warning. Future improvements to the workflow may involve making watertight
 % and node conforming disc meshes based off of the vertebral body
 % geometries. For now, we will continue with these "proxy" discs.
-
-n = length(subjectData.subject); % number of subjects
 
 % Looping through each subject's '.discs' field and appending mesh
 % metadata:

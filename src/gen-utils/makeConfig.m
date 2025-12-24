@@ -26,8 +26,11 @@ function cfg = makeConfig()
     % Plotting (if 'false', plots will be skipped)
     % -------------------------------------------------
     cfg.plot.showGeometryMetadata = false;
-    cfg.plot.monitorDiscEndplates = false; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
+
+    cfg.plot.monitorDiscEndplates = true; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
     cfg.plot.showDiscMetadata = false;
+
+    cfg.plot.showGeometryAlignments = false;
 
     % -------------------------------
     % Overwriting
