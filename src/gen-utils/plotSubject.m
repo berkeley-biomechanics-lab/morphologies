@@ -2,7 +2,7 @@ function plotSubject(subject)
 % Visualizing subject geometric properties
 
     figure;
-    sgtitle("Subject " + subject.vertebrae.subjName + " Visualization");
+    sgtitle("Subject " + subject.name + " Visualization");
     
     ax1 = subplot(3,7,[1 17]); ax1.SortMethod = 'childorder';
     hold on; axis equal;

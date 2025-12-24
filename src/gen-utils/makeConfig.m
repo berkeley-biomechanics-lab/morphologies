@@ -32,6 +32,8 @@ function cfg = makeConfig()
 
     cfg.plot.showGeometryAlignments = false;
 
+    cfg.plot.monitorSlices = true;
+
     % -------------------------------
     % Measurements
     % -------------------------------

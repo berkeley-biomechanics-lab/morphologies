@@ -33,9 +33,8 @@ for i = 1:n
     % Looping through each vertebra of subject i:
     for v = 1:numLevels
 
-        % Getting vertebra mesh properties:
-        vMesh = subj.vertebrae.mesh(v);
-        V = vMesh.alignedProperties.Points; % vertebra aligned points
+        
+        V = subj.vertebrae.mesh(1).alignedProperties.Points; % vertebra aligned points
 
         % Geometric limits:
         xlim = [min(V(:,1)), max(V(:,1))];
@@ -54,7 +53,6 @@ for i = 1:n
             Px = makePlane('x', sx(k), bbox);
             Py = makePlane('y', sy(k), bbox);
             Pz = makePlane('z', sz(k), bbox);
-            planes.Px = Px; planes.Py = Py; planes.Pz = Pz;
     
             % --- Slice mesh with each plane ---
         
@@ -63,15 +61,16 @@ for i = 1:n
             monitorSlices = cfg.plot.monitorSlices; % getting config settings
             
             if monitorSlices
-                % reusing figure for slicing process:
+                % reusing figure for disc-by-disc construction process:
                 if ~exist('slicesfig','var') || ~ishandle(slicesfig)
-                    slicesfig = plotSliceMonitor(vMesh, planes, figure);
+                    %slicesfig = plotSliceMonitor(D, figure);
                 else
-                    slicesfig = plotSliceMonitor(vMesh, planes, slicesfig);
+                    %slicesfig = plotSliceMonitor(D, slicesfig);
                 end
             end
         end
-    end  
+    end
+    
 end
 
 %% MATLAB CLEANUP
