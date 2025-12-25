@@ -5,7 +5,7 @@
 % File: main.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-23-2025
+% Last Updated: 12-25-2025
 %
 % Description: main pipeline for spinal morphology measurement project
 %
@@ -23,25 +23,15 @@ format compact; % suppressing blank lines and decreasing spacing in the CW
 % stl geometry files are configured according to setup described in the 
 % README.md file at the head of the repo.
 
+% Identifying the head MATLAB execution file:
 mainFile = matlab.desktop.editor.getActiveFilename; % path of 'main.m' file
 srcPath = fileparts(mainFile); % directory path that holds 'main.m' file
 projectPath = fileparts(srcPath); % morphologies repo path
 cd(srcPath); % setting MATLAB repo to the 'main.m' repo
 
-% Getting paths of vertebral and disc stl files:
-stlDir = 'stl-geometries'; vertDir = 'vertebra-stls'; discDir = 'disc-stls';
-stlPath = fullfile(projectPath, stlDir); % stl geometry path
-vertPath = fullfile(stlPath, vertDir); % vertebrae geometry path
-discPath = fullfile(stlPath, discDir); % disc geometry path
-
-% Getting paths of utility functions:
-genUtilsDir = 'gen-utils'; vertUtilsDir = 'vert-utils'; discUtilsDir = 'disc-utils';
-genUtilPath = fullfile(srcPath, genUtilsDir); % stl geometry path
-vertUtilPath = fullfile(srcPath, vertUtilsDir); % vertebrae geometry path
-discUtilPath = fullfile(srcPath, discUtilsDir); % disc geometry path
-
-% Adding paths of utility functions:
-addpath(genUtilPath, vertUtilPath, discUtilPath);
+% Now that the head MATLAB execution file has been identified, the
+% supplementary utility files will be identified here:
+setUtilPaths; % adding utility directory files into MATLAB workspace
 
 %% PIPELINE CONFIGURATION
 % Instead of scattering parameters across scripts, we can define them once
@@ -148,7 +138,19 @@ alignGeometries; % appends alignment metadata into 'subjectData'
 % the respective '.subject.{vertebrae,discs}' fields under the field of
 % '.measurements'.
 %
-% We first populated the '.measurements' field with the measurements
+% We first populate the '.measurements' field with the measurements
 % associated with the cross sectional (CS) slicer routine:
-makeSlicerMeasurements; % populates 'subjectData' with CS-based measurements
+makeSlicerMeasurements; % populates 'subjectData' with slicer-based measurements
+
+% Now we populate the '.measurements' field with height measurement
+% routine:
+%makeHeightMeasurements; % populates 'subjectData' with height-based measurements
+
+%% ANALYSIS
+% Displaying raw measurement data and comparing kyphotic and normative
+% experimental groups
+
+%% EXPORTING
+% Writing 'subjectData' to file to save on future measurement processes and
+% further analysis
 

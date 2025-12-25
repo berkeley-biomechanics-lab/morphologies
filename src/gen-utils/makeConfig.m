@@ -25,6 +25,9 @@ function cfg = makeConfig()
     % -------------------------------------------------
     % Plotting (if 'false', plots will be skipped)
     % -------------------------------------------------
+    % NOTE: some of these figures are graphics intensive, so turning many
+    % of them on will likely cause MATLAB to fail. It is recommended to use
+    % these for maitenance only!
     cfg.plot.showGeometryMetadata = false;
 
     cfg.plot.monitorDiscEndplates = true; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
@@ -33,14 +36,19 @@ function cfg = makeConfig()
     cfg.plot.showGeometryAlignments = false;
 
     cfg.plot.monitorVertebraSlices = false; % if 'makeVertebraSlices' = false, this is skipped
-    cfg.plot.monitorDiscSlices = false; % if 'makeDiscSlices' = false, this is skipped
+    cfg.plot.monitorDiscSlices = true; % if 'makeDiscSlices' = false, this is skipped
 
     % -------------------------------
     % Measurements
     % -------------------------------
     % Skipping measurements or not (mainly for maitenance):
-    cfg.measurements.makeVertebraSlices = true;
+    cfg.measurements.makeVertebraSlices = false;
     cfg.measurements.makeDiscSlices = true;
+
+    % Slicer measurements are generally poorly calculated around the
+    % boundaries of the geometries, so the inferior and superior width
+    % measurements will be set to 0, given by the following tolerance:
+    cfg.measurements.slicerIgnorance = 0.2; % 0 <= slicerIgnorance < 0.5
 
     % Measurement frequencies:
     cfg.measurements.numSlices = 50;

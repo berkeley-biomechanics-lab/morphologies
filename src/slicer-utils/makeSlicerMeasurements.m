@@ -25,6 +25,7 @@ varsbefore = who;
 
 n = subjectData.numSubjects; % number of subjects
 numSlices = cfg.measurements.numSlices; % slicer frequency
+slicerIgnorance = cfg.measurements.slicerIgnorance; % how much of the inferior and superior slices will be ignored
 
 makeVertebraSlices = cfg.measurements.makeVertebraSlices; % if 'false', vertebra slices will be skipped
 makeDiscSlices = cfg.measurements.makeDiscSlices; % if 'false', disc slices will be skipped
@@ -85,7 +86,7 @@ if makeVertebraSlices
             % Looping through slices for all three anatomical planes:
             for k = 1:numSlices
                 % --- Slice mesh with each plane ---
-                slices = sliceAllAxes(vert, Px(k), Py(k), Pz(k), k/numSlices);
+                slices = sliceAllAxes(vert, Px(k), Py(k), Pz(k), k/numSlices, slicerIgnorance);
     
                 % --- Measurement outputs ---
                 measures.csa.X(k) = slices.X.area;
@@ -177,8 +178,7 @@ if makeDiscSlices
             for k = 1:numSlices
                 % --- Slice mesh with each plane ---
                 ignorance = 0.1; % refers to how much of the inferior and superior slices will be ignored
-                ignoreBoundaries = true; % if 'true', the inferior and superior boundary slices will be ignored
-                slices = sliceAllAxes(disc, Px(k), Py(k), Pz(k), k/numSlices, ignoreBoundaries, ignorance);
+                slices = sliceAllAxes(disc, Px(k), Py(k), Pz(k), k/numSlices, ignorance);
     
                 % --- Measurement outputs ---
                 measures.csa.X(k) = slices.X.area;

@@ -1,11 +1,6 @@
-function slice = sliceGeometry(axis, geometry, plane, kr, ignoreBoundaries, ignorance)
+function slice = sliceGeometry(axis, geometry, plane, kr, ignorance)
 % geometry : triangulation or surface mesh
 % plane    : triangulated slicing plane (patch/triangulation)
-
-    if nargin < 5
-        ignoreBoundaries = false;
-        ignorance = 0;
-    end
 
     % Initialize output
     slice.curves3D = {};
@@ -15,8 +10,11 @@ function slice = sliceGeometry(axis, geometry, plane, kr, ignoreBoundaries, igno
     
     slice.widths.w = zeros(1,2);
     slice.widths.endpoints = cell(1,2);
+    
+    axes2D = [1 0; 0 1];
+    slice.widths.endpoints = axes2D;
 
-    if ignoreBoundaries && (kr <= ignorance || kr >= (1-ignorance))
+    if kr <= ignorance || kr >= (1-ignorance)
         return
     end
 
@@ -112,16 +110,7 @@ function slice = sliceGeometry(axis, geometry, plane, kr, ignoreBoundaries, igno
     end
 
     % --- Calculate widths ---
-    axes2D = [1 0; 0 1];
     widths = midlineWidths(newPoly, axes2D);
-
-    % AP and lateral widths are generally poorly calculated around the
-    % boundaries of the geometries, so the inferior and superior width
-    % measurements will be set to 0, given by the following tolerance:
-    widthIgnorance = 0.2;
-    if (kr <= widthIgnorance || kr >= (1-widthIgnorance))
-        widths.w = [0, 0];
-    end
 
     % --- Outputs ---
     slice.poly = newPoly;

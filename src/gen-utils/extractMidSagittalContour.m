@@ -1,4 +1,5 @@
 function YZ = extractMidSagittalContour(TR, xMid, tol)
+
     P = TR.Points;
 
     mask = abs(P(:,1) - xMid) < tol;

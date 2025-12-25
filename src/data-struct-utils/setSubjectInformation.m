@@ -86,6 +86,12 @@ selectedSubjects = getSubjectSelection(measuredSubjects, allSubjectNames);
 %% SETTING DATA OF VERTEBRA LEVEL PROPERTIES FOR EACH SUBJECT
 % Organizing vertebral datas and constructing 'subject' data struct 
 
+% Getting paths of vertebral and disc stl files:
+stlDir = 'stl-geometries'; vertDir = 'vertebra-stls'; discDir = 'disc-stls';
+stlPath = fullfile(projectPath, stlDir); % stl geometry path
+vertPath = fullfile(stlPath, vertDir); % vertebrae geometry path
+discPath = fullfile(stlPath, discDir); % disc geometry path
+
 % Getting array of vertebral data structs, one per subject, in 
 % 'vertebraSTLData' and string array of selected subject names in
 % 'subjectNames':

@@ -5,8 +5,11 @@ function validateConfig(cfg)
         cfg struct
     end
 
-    assert(cfg.disc.alpha > 0 && cfg.disc.alpha < 50, ...
-        'Endplate % of vertebral height must be between 0 and 50.');
+    assert(cfg.disc.alpha > 0 && cfg.disc.alpha < 0.5, ...
+        'Endplate % of vertebral height must be between 0 and 50!');
+
+    assert(cfg.measurements.slicerIgnorance >= 0 && cfg.disc.alpha < 0.5, ...
+        'Slicer measurement ignorance ratio must be between 0 and 0.5!');
 
 end
 

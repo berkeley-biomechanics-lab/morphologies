@@ -16,7 +16,6 @@ function discData = getDiscInformation(discPath, vertebraData, allLevelNames)
 
         subjName = vertebraData(i).vertebrae.subjName;
         vertebraNames = vertebraData(i).vertebrae.levelNames;
-        vertebraPaths = vertebraData(i).vertebrae.levelPaths;
 
         % Convert to index positions in global anatomical ordering
         [~, idx] = ismember(vertebraNames, allLevelNames);
