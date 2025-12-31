@@ -30,7 +30,7 @@ if cfg.overwrite.measures || ~measurementsDone
         subj = subjectData.subject(i);
     
         % Write to 'data/measurements' directory:
-        writeSubjectData(subjectData.subject(i), cfg);
+        writeSubjectData(subj, cfg);
     end
     fprintf("Subjects have been written to 'data/measurements' directory!\n");
 end

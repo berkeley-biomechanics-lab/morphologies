@@ -144,10 +144,10 @@ areMeasurementsDone; % returns boolean 'measurementsDone'
 
 % Populating the '.measurements' field with the measurements associated 
 % with the cross sectional (CS) slicer routine:
-%makeSlicerMeasurements; % populates 'subjectData' with slicer-based measurements
+makeSlicerMeasurements; % populates 'subjectData' with slicer-based measurements
 
 % Populating the '.measurements' field with height measurements:
-%makeHeightMeasurements; % populates 'subjectData' with height-based measurements
+makeHeightMeasurements; % populates 'subjectData' with height-based measurements
 
 % Populating the '.measurements' field with volume measurements:
 makeVolumeMeasurements; % populates 'subjectData' with volume-based measurements

@@ -37,7 +37,7 @@ else
     end
     job.count = 0;
     
-    tic
+    tic;
     % Looping through each subject:
     for i = 1:subjectData.numSubjects
         subj = subjectData.subject(i);

@@ -7,7 +7,7 @@
 % Project: Morphologies
 % Last Updated: 12-30-2025
 %
-% Description: 
+% Description: measuring the volumes of all the subjects' goemetries 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -18,25 +18,24 @@ warning('off','all') % turning on warnings
 % Getting workspace variables at the start of the new script:
 varsbefore = who;
 
-%% GEOMETRY SLICING
-% Slicing through each subjects' vertebra and disc geometry and appending 
-% the associated measurement data to 'subject.{vertebrae,discs}..."
+%% COMPUTING VOLUME
+% Measuring each subjects' vertebrae and discs volume
 
 % Skipping if measurements are already done:
 if measurementsDone
-    fprintf('Slicer measurements already done!\n');
+    fprintf('Volume measurements already done!\n');
 else
-    % --- Slicer progress tracking ---
+    % --- Volume tracking ---
     job.total = 0;
-    if cfg.measurements.makeVertebraSlices
+    if cfg.measurements.makeVertebraVols
         job.total = job.total + sum(arrayfun(@(s) s.vertebrae.numLevels, subjectData.subject));
     end
-    if cfg.measurements.makeDiscSlices
+    if cfg.measurements.makeDiscVols
         job.total = job.total + sum(arrayfun(@(s) s.discs.numLevels, subjectData.subject));
     end
     job.count = 0;
     
-    tic
+    tic;
     % Looping through each subject:
     for i = 1:subjectData.numSubjects
         subj = subjectData.subject(i);
@@ -45,22 +44,20 @@ else
         job.numSubjects = subjectData.numSubjects;
     
         % Vertebra slices:
-        if cfg.measurements.makeVertebraSlices
+        if cfg.measurements.makeVertebraVols
             job.levelIdx = 0;
-            [subjectData.subject(i).vertebrae.measurements.slicer, job] = ...
-                sliceGeometrySet(subj.vertebrae.mesh, cfg, ...
-                cfg.plot.monitorVertebraSlices, job);
+            [subjectData.subject(i).vertebrae.measurements.vol, job] = ...
+                getVolumeGeometrySet(subj.vertebrae, job);
         end
     
         % Disc slices:
-        if cfg.measurements.makeDiscSlices
+        if cfg.measurements.makeDiscVols
             job.levelIdx = 0;
-            [subjectData.subject(i).discs.measurements.slicer, job] = ...
-                sliceGeometrySet(subj.discs.mesh, cfg, ...
-                cfg.plot.monitorDiscSlices, job);
+            [subjectData.subject(i).discs.measurements.vol, job] = ...
+                getVolumeGeometrySet(subj.discs, job);
         end
     end
-    fprintf('Slicer measurements done in %.2f seconds (%.2f minutes)!\n', toc, toc/60);
+    fprintf('Volume measurements done in %.2f seconds (%.2f minutes)!\n', toc, toc/60);
 end
 
 %% MATLAB CLEANUP

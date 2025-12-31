@@ -33,6 +33,7 @@ measurementsDone = true;
 
 % Checking overwriting setting:
 if cfg.overwrite.measures
+    measurementsDone = false;
     fprintf("Overwriting all existing measurements!\n");
 else
     % Looping through each subject:

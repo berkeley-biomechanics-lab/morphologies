@@ -59,6 +59,9 @@ function cfg = makeConfig(projectPath)
     cfg.measurements.makeVertebraHeights = true;
     cfg.measurements.makeDiscHeights = true;
 
+    cfg.measurements.makeVertebraVols = true;
+    cfg.measurements.makeDiscVols = true;
+
     % Slicer measurements are generally poorly calculated around the
     % boundaries of the geometries, so the inferior and superior width
     % measurements will be set to 0, given by the following tolerance:
