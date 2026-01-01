@@ -22,7 +22,7 @@ varsbefore = who;
 
 % Skipping if measurements are already done:
 if measurementsDone
-    fprintf('Measurements have already done --> geometry alignment!\n');
+    fprintf('Measurements have already done --> skipping geometry alignment!\n');
     return;
 end
 

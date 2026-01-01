@@ -15,8 +15,6 @@
 
 clc; % clearing command window
 
-warning('off','all') % turning on warnings
-
 % Getting workspace variables at the start of the new script:
 varsbefore = who;
 

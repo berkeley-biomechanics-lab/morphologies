@@ -1,6 +1,6 @@
 function fname = getSubjectDataFilename(subjectID, cfg)
 
-    outDir = fullfile(cfg.paths.data, 'measurements');
+    outDir = cfg.paths.rawMeasurements;
     
     if ~exist(outDir, 'dir')
         mkdir(outDir)

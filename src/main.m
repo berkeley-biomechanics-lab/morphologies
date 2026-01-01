@@ -169,5 +169,5 @@ clearvars -except cfg;
 
 % Summarizing all subject data into easy-to-use data structures, and 
 % visualizing the summarized raw data:
-summarizeData; % builds measurement table 'T' and visualizes raw data
+summarizeData; % visualizes raw data and exports for SPM analysis
 

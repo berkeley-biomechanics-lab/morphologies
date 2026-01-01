@@ -27,10 +27,11 @@ git clone https://github.com/YousufAbubakr/morphologies.git
 ```
 📦morphoogies                
  ┣ 📂data                    ← output files, figures, etc.
- ┃ ┣ 📂measurements          ← directory of subject data .mat files
+ ┃ ┣ 📂raw                   ← directory of subject data .mat files with raw geometry measurements
  ┃ ┃ ┣ 📜SubjectA.mat
  ┃ ┃ ┣ 📜SubjectB.mat
  ┃ ┃ ┣ ...
+ ┃ ┣ 📂summary               ← directory of summary morphology data for SPM analysis
  ┣ 📂src                     ← utility, analysis, and pipeline codes
  ┃ ┣ 📂align-utils
  ┃ ┣ 📂analysis-utils  

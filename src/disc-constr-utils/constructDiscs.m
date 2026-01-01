@@ -5,7 +5,7 @@
 % File: constructDiscs.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-23-2025
+% Last Updated: 1-1-2025
 %
 % Description: constructing and exporting disc geometries via an endplate 
 % extraction → surface lofting → stitching pipeline
@@ -18,21 +18,20 @@ varsbefore = who;
 %% DISC STL CONSTRUCTION
 % Loading mesh data into 'subjectData'
 
+% If 'true', then disc construction will be skipped:
+alreadyMade = cfg.disc.alreadyMade;
+
 % Skipping if measurements are already done:
 if measurementsDone
     fprintf('Measurements have already done --> skipping disc construction!\n');
     return;
 end
 
-% Starting rountine clock:
-tic;
-
 n = subjectData.numSubjects; % number of subjects
 
-% If 'true', then disc construction will be skipped:
-alreadyMade = cfg.disc.alreadyMade;
-
 if ~alreadyMade
+    tic; % starting rountine clock
+
     % If 'false', then disc levels that have already been exported will be 
     % skipped:
     overwriteDiscExports = cfg.overwrite.discExports;
@@ -131,6 +130,7 @@ if ~alreadyMade
             end
         end
     end
+    fprintf('Disc construction done in %.2f seconds (%.2f minutes)!\n', toc, toc/60);
 end
 
 %% DISC STL METADATA PROCESSING
@@ -175,7 +175,6 @@ if showDiscMetadata
         plotDiscs(subjectData.subject(j));
     end
 end
-fprintf('Disc construction done in %.2f seconds (%.2f minutes)!\n', toc, toc/60);
 
 %% MATLAB CLEANUP
 % Deleting extraneous subroutine variables:

@@ -12,6 +12,8 @@ function cfg = makeConfig(projectPath)
     % Path information
     % -------------------------------
     cfg.paths.data = fullfile(projectPath, 'data');
+    cfg.paths.rawMeasurements = fullfile(cfg.paths.data, 'raw');
+    cfg.paths.sumMeasurements = fullfile(cfg.paths.data, 'summary');
 
 
     % -------------------------------
