@@ -45,7 +45,7 @@ function height = computeHeightMap(mesh, cfg, job)
     heightMap = reshape(heights, nLAT, nAP);
     heightMap = heightMap'; LAT = LAT'; AP = AP'; % reorienting axes
 
-    % Remove NaNs from 2D position and height fields:
+    % Characterizing NaNs in 2D position fields:
     validMask = isnan(heightMap);
     AP(validMask) = NaN; LAT(validMask) = NaN;
     
@@ -70,27 +70,19 @@ function height = computeHeightMap(mesh, cfg, job)
 
     height.LAT.coords = LAT(iAP,:);
     height.AP.coords  = AP(:,iLAT)';
+
+    % Applying 'ignorance' data processing
+    krs = (1:res)/res;
+    ignoranceMask = krs <= ignorance | krs >= (1-ignorance);
             
-    % Remove NaNs
-    validLAT = ~isnan(height.LAT.profile);
-    validAP  = ~isnan(height.AP.profile);
-    
-    height.LAT.profile = height.LAT.profile(validLAT);
-    height.LAT.coords  = height.LAT.coords(validLAT);
-    [height.LAT.coords, height.LAT.profile] = ... 
-                resampleProfile(height.LAT.coords, ...
-                                height.LAT.profile, ...
-                                res, ignorance);
-    
-    height.AP.profile  = height.AP.profile(validAP);
-    height.AP.coords   = height.AP.coords(validAP);
-    [height.AP.coords, height.AP.profile] = ... 
-                resampleProfile(height.AP.coords, ...
-                                height.AP.profile, ...
-                                res, ignorance);
+    height.LAT.coords(ignoranceMask) = NaN;
+    height.LAT.profile(ignoranceMask) = NaN;
+
+    height.AP.coords(ignoranceMask) = NaN;
+    height.AP.profile(ignoranceMask) = NaN;
 
     if monitor
-        plotHeightMap(height, mesh, cfg, gcf)
+        plotHeightMap(height, mesh, gcf)
     end
 
     % ---- Progress update ----

@@ -6,9 +6,9 @@ function slice = sliceGeometry(axis, geometry, plane, kr, ignorance)
     slice.curves3D = {};
     slice.poly     = polyshape();
     slice.overlap  = false;
-    slice.area     = 0;
+    slice.area     = NaN;
     
-    slice.widths.w = zeros(1,2);
+    slice.widths.w = NaN(1,2);
     slice.widths.endpoints = cell(1,2);
     
     axes2D = [1 0; 0 1];

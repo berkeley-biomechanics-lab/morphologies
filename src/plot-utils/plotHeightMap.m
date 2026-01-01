@@ -1,4 +1,4 @@
-function plotHeightMap(height, mesh, cfg, fig)
+function plotHeightMap(height, mesh, fig)
 % Visualize 2D height distribution
 
     set(0, 'CurrentFigure', fig); clf; 
@@ -32,8 +32,8 @@ function plotHeightMap(height, mesh, cfg, fig)
         'LineWidth',1.5);
 
     % --- Overlay AP / LAT lines ---
-    xlim = height.LAT.coords([1 end]);
-    ylim = height.AP.coords([1 end]);
+    xlim = [min(height.LAT.coords) max(height.LAT.coords)];
+    ylim = [min(height.AP.coords) max(height.AP.coords)];
 
     plot([cx cx], ylim, 'k:', 'LineWidth',1.5); % AP
     plot(xlim, [cy cy], 'k:', 'LineWidth',1.5); % LAT

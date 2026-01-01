@@ -60,8 +60,8 @@ function fig = plotSliceMonitor(object, slices, k, cfg, measurements, fig)
         plot(cfg_i.slice.poly, 'FaceColor',[0.7 0.7 0.7]);
 
         for j = 1:2
-            % Only plots widths if they're are both non-zero:
-            if ~any(cfg_i.slice.widths.w == 0)
+            % Only plots widths if they're are NOT any NaNs and both non-zero:
+            if all(cfg_i.slice.widths.w ~= 0) && ~any(isnan(cfg_i.slice.widths.w))
                 pjx1 = cfg_i.slice.widths.endpoints{j}(:,1); % coordinates in the x1 direction
                 pjx2 = cfg_i.slice.widths.endpoints{j}(:,2); % coordinates in the x2 direction
     

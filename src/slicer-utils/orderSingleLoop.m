@@ -1,5 +1,7 @@
 function loop = orderSingleLoop(adj, loopVerts)
 
+    assert(all(ismember(loopVerts, unique([adj{loopVerts}]))), "Loop error detected!")
+
     % Start anywhere
     start = loopVerts(1);
     loop = start;
@@ -9,8 +11,9 @@ function loop = orderSingleLoop(adj, loopVerts)
 
     while true
         nbrs = adj{curr};
-        % pick neighbor not equal to previous
-        next = nbrs(nbrs ~= prev);
+
+        % pick neighbor not equal to previous and curr:
+        next = nbrs(nbrs ~= prev); next = next(next ~= curr);
 
         if isempty(next)
             break

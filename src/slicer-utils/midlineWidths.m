@@ -37,7 +37,7 @@ function widths = midlineWidths(poly, axes2D)
         [in,~] = intersect(poly, [P1; P2]);
 
         if isempty(in)
-            widths.w(i) = 0;
+            widths.w(i) = NaN;
             widths.endpoints{i} = [NaN NaN; NaN NaN];
             continue
         end
