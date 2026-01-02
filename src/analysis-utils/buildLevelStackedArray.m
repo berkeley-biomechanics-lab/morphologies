@@ -75,7 +75,7 @@ function [Y_control, Y_kyphotic, meta] = buildLevelStackedArray( ...
     meta.measurement = measurement;
     meta.axis        = axis;
     meta.structure   = structure;
-    meta.levelRange  = levelRange;
+    meta.levelRange  = levels;
     meta.Q           = Q;
 
     meta.SubjectID   = subjID;

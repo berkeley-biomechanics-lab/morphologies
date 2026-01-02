@@ -1,6 +1,6 @@
 function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
 
-    measureDir = fullfile(cfg.paths.data, 'measurements');
+    measureDir = cfg.paths.rawMeasurements;
     files = dir(fullfile(measureDir, '*.mat'));
 
     rows_slice  = {};

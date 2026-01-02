@@ -26,6 +26,8 @@ function exportSPMArray(outDir, name, Y_control, Y_kyphotic, meta)
         mkdir(outDir);
     end
 
+    levels = cellstr(meta.levels);
+
     export = struct();
     export.Y_control    = Y_control;
     export.Y_kyphotic   = Y_kyphotic;
@@ -41,7 +43,7 @@ function exportSPMArray(outDir, name, Y_control, Y_kyphotic, meta)
     end
 
     save(fullfile(outDir, name + ".mat"), ...
-         "export", "-v7.3");
+         'Y_control', 'Y_kyphotic', 'levels', '-v7');
 
     fprintf("✔ Exported %s (%s | %s | %s)\n", ...
         name, meta.measurement, meta.structure, meta.axis);

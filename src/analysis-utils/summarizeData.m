@@ -104,7 +104,7 @@ levels = ["T14","L3"]; % choosing levels associated with major apex region
 
 sumPath = cfg.paths.sumMeasurements; % summary file path
 
-% ---- Exporting slicer summary arrays (vertebra and disc) ----
+% ---- SLICER: Exporting summary arrays (vertebra and disc) ----
 vertZ = struct(); vertZ.notes = 'Vertebra Z-plane CSA profile';
 vertZ.levels = metaVertZ.levelRange; vertZ.axis = metaVertZ.axis;
 vertZ.measurement = metaVertZ.measurement; vertZ.structure = metaVertZ.structure;
@@ -115,7 +115,7 @@ discZ.levels = metaDiscZ.levelRange; discZ.axis = metaDiscZ.axis;
 discZ.measurement = metaDiscZ.measurement; discZ.structure = metaDiscZ.structure;
 exportSPMArray(sumPath, 'discZ', YcDiscZ, YkDiscZ, discZ);
 
-% ---- Exporting height summary arrays (vertebra and disc, LAT and AP) ----
+% ---- HEIGHT: Exporting summary arrays (vertebra and disc, LAT and AP) ----
 vertLAT = struct(); vertLAT.notes = 'Vertebra LAT-plane height profile';
 vertLAT.levels = metaVertLAT.levelRange; vertLAT.axis = metaVertLAT.axis;
 vertLAT.measurement = metaVertLAT.measurement; vertLAT.structure = metaVertLAT.structure;
@@ -136,14 +136,14 @@ discAP.levels = metaDiscAP.levelRange; discAP.axis = metaDiscAP.axis;
 discAP.measurement = metaDiscAP.measurement; discAP.structure = metaDiscAP.structure;
 exportSPMArray(sumPath, 'discAP', YcDiscAP, YkDiscAP, discAP);
 
-% ---- Exporting volume summary arrays (vertebra and disc) ----
+% ---- VOLUME: Exporting summary arrays (vertebra and disc) ----
 vertVol = struct(); vertVol.notes = 'Vertebra volume profile';
-vertVol.levels = levels; vertVol.axis = 'volume';
+vertVol.levels = levelsVertVol; vertVol.axis = 'volume';
 vertVol.measurement = 'volume'; vertVol.structure = 'vertebra';
 exportSPMArray(sumPath, 'vertVol', YcVertVol, YkVertVol, vertVol);
 
 discVol = struct(); discVol.notes = 'Disc volume profile';
-discVol.levels = levels; discVol.axis = 'volume';
+discVol.levels = levelsDiscVol; discVol.axis = 'volume';
 discVol.measurement = 'volume'; discVol.structure = 'disc';
 exportSPMArray(sumPath, 'discVol', YcDiscVol, YkDiscVol, discVol);
 
