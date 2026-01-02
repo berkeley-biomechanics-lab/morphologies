@@ -153,9 +153,9 @@ makeHeightMeasurements; % populates 'subjectData' with height-based measurements
 makeVolumeMeasurements; % populates 'subjectData' with volume-based measurements
 
 %% EXPORTING
-% Writing subject specific data to the 'data/measurements' directory
+% Writing subject specific data to the 'data/raw' directory
 
-% 'data/measurements' directory will be populated with 'XXX.mat' files,
+% 'data/raw' directory will be populated with 'XXX.mat' files,
 % where 'XXX' refers to the subject name (ID) of each porcine subject:
 exportData; % if measurements are not done or set to be written, files will be written here
 

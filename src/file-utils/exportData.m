@@ -7,7 +7,7 @@
 % Project: Morphologies
 % Last Updated: 12-30-2025
 %
-% Description: writing subject specific data to the 'data/measurements' 
+% Description: writing subject specific data to the 'data/raw' 
 % directory (if measurements are not done or set to be overwritten)
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -16,7 +16,7 @@
 varsbefore = who;
 
 %% EXPORTING EACH SUBJECT
-% Each subject gets its own data file written at the 'data/measurements' 
+% Each subject gets its own data file written at the 'data/raw' 
 % directory
 
 % Checking if measurements are not done or set to be overwritten:
