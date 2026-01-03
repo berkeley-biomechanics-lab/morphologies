@@ -30,7 +30,7 @@ fprintf('Summarizing measurements ...\n');
 % direction, and measurement types {csa, widths, etc}
 
 % Endpoint spinal levels to be visualized:
-levels = ["T1","L6"]; % choosing levels associated with major apex region
+levels = cfg.summary.levelsVisualized;
 
 % ---- Slicer measurements (using the following settings) ----
 %       Structure : vertebra & disc
@@ -68,7 +68,7 @@ plotRawVolume(Tvolume,'Structure','disc','Levels',levels)
 % associated with it.
 
 % Endpoint spinal levels to be exported:
-levels = ["T14","L3"]; % choosing levels associated with major apex region
+levels = cfg.summary.levelsExported;
 
 % ---- Slicer summary arrays (vertebra and disc, Z-axis, CSA) ----
 [YcVertZ, YkVertZ, metaVertZ] = buildLevelStackedArray( ...

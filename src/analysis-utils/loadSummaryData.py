@@ -40,34 +40,34 @@ vertZPath = os.path.join(summaryDirPath, fileNames[7])
 # Loading morphlogy data with loadmat, disc data -->
 discAPData = loadmat(discAPPath)
 YcDiscAP = discAPData['Y_control']; YkDiscAP = discAPData['Y_kyphotic']
-XDiscAP = [e[0] for e in np.concatenate(discAPData['levels']).tolist()]
+lvlRangeDiscAP = np.array([e[0] for e in np.concatenate(discAPData['levels']).tolist()])
 
 discLATData = loadmat(discLATPath)
 YcDiscLAT = discLATData['Y_control']; YkDiscLAT = discLATData['Y_kyphotic']
-XDiscLAT = [e[0] for e in np.concatenate(discLATData['levels']).tolist()]
+lvlRangeDiscLAT = np.array([e[0] for e in np.concatenate(discLATData['levels']).tolist()])
 
 discVolData = loadmat(discVolPath)
 YcDiscVol = discVolData['Y_control']; YkDiscVol = discVolData['Y_kyphotic']
-XDiscVol = [e[0] for e in np.concatenate(discVolData['levels']).tolist()]
+lvlRangeDiscVol = np.array([e[0] for e in np.concatenate(discVolData['levels']).tolist()])
 
 discZData = loadmat(discZPath)
 YcDiscZ = discZData['Y_control']; YkDiscZ = discZData['Y_kyphotic']
-XDiscZ = [e[0] for e in np.concatenate(discZData['levels']).tolist()]
+lvlRangeDiscZ = np.array([e[0] for e in np.concatenate(discZData['levels']).tolist()])
 
 # Vertebra data -->
 vertAPData = loadmat(vertAPPath)
 YcVertAP = vertAPData['Y_control']; YkVertAP = vertAPData['Y_kyphotic']
-XVertAP = [e[0] for e in np.concatenate(vertAPData['levels']).tolist()]
+lvlRangeVertAP = np.array([e[0] for e in np.concatenate(vertAPData['levels']).tolist()])
 
 vertLATData = loadmat(vertLATPath)
 YcVertLAT = vertLATData['Y_control']; YkVertLAT = vertLATData['Y_kyphotic']
-XVertLAT = [e[0] for e in np.concatenate(vertLATData['levels']).tolist()]
+lvlRangeVertLAT = np.array([e[0] for e in np.concatenate(vertLATData['levels']).tolist()])
 
 vertVolData = loadmat(vertVolPath)
 YcVertVol = vertVolData['Y_control']; YkVertVol = vertVolData['Y_kyphotic']
-XVertVol = [e[0] for e in np.concatenate(vertVolData['levels']).tolist()]
+lvlRangeVertVol = np.array([e[0] for e in np.concatenate(vertVolData['levels']).tolist()])
 
 vertZData = loadmat(vertZPath)
 YcVertZ = vertZData['Y_control']; YkVertZ = vertZData['Y_kyphotic']
-XVertZ = [e[0] for e in np.concatenate(vertZData['levels']).tolist()]
+lvlRangeVertZ = np.array([e[0] for e in np.concatenate(vertZData['levels']).tolist()])
 

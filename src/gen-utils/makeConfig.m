@@ -74,12 +74,12 @@ function cfg = makeConfig(projectPath)
     % Slicer measurements are generally poorly calculated around the
     % boundaries of the geometries, so the inferior and superior width
     % measurements will be set to 0, given by the following tolerance:
-    cfg.measurements.slicerIgnorance = 0.05; % 0 <= slicerIgnorance < 0.5, <--- if changed, files will be rewritten
-    cfg.measurements.heightIgnorance = 0.05; % 0 <= heightIgnorance < 0.5, <--- if changed, files will be rewritten
+    cfg.measurements.slicerIgnorance = 0.00; % 0 <= slicerIgnorance < 0.5, <--- if changed, files will be rewritten
+    cfg.measurements.heightIgnorance = 0.00; % 0 <= heightIgnorance < 0.5, <--- if changed, files will be rewritten
 
     % Measurement frequencies:
-    cfg.measurements.numSlices = 20; % <--- if changed, files will be rewritten
-    cfg.measurements.heightResolution = 50; % <--- if changed, files will be rewritten
+    cfg.measurements.numSlices        = 100; % <--- if changed, files will be rewritten
+    cfg.measurements.heightResolution = 100; % <--- if changed, files will be rewritten
 
 
     % -------------------------------
@@ -98,5 +98,11 @@ function cfg = makeConfig(projectPath)
     % levels that have already been exported will be skipped.
     cfg.overwrite.measures = false;
     cfg.overwrite.discExports = false; % if '.alreadyMade' = true, then '.discExports' will be skipped
+
+    % -------------------------------
+    % Data summary
+    % -------------------------------
+    cfg.summary.levelsVisualized = ["T1","L6"]; % endpoint spinal levels to be visualized (default = all ["T1" --> "L6"])
+    cfg.summary.levelsExported = ["T14","L3"]; % endpoint spinal levels to be exported for SPM analysis
 end
 
