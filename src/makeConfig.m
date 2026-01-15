@@ -50,7 +50,7 @@ function cfg = makeConfig(projectPath)
     cfg.plot.monitorDiscEndplates = false; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
     cfg.plot.showDiscMetadata = false;
 
-    cfg.plot.showGeometryAlignments = false;
+    cfg.plot.showGeometryAlignments = true;
 
     cfg.plot.monitorVertebraSlices = false; % if 'makeVertebraSlices' = false, this is skipped
     cfg.plot.monitorDiscSlices = false; % if 'makeDiscSlices' = false, this is skipped
@@ -103,6 +103,6 @@ function cfg = makeConfig(projectPath)
     % Data summary
     % -------------------------------
     cfg.summary.levelsVisualized = ["T1","L6"]; % endpoint spinal levels to be visualized (default = all ["T1" --> "L6"])
-    cfg.summary.levelsExported = ["T14","L3"]; % endpoint spinal levels to be exported for SPM analysis
+    cfg.summary.levelsExported = ["T1","L6"]; % endpoint spinal levels to be used for scalar analysis and exported for SPM analysis
 end
 
