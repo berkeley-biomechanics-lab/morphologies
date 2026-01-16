@@ -50,7 +50,7 @@ function cfg = makeConfig(projectPath)
     cfg.plot.monitorDiscEndplates = false; % if '.alreadyMade' = true, then '.monitorDiscEndplates' will be skipped
     cfg.plot.showDiscMetadata = false;
 
-    cfg.plot.showGeometryAlignments = true;
+    cfg.plot.showGeometryAlignments = false;
 
     cfg.plot.monitorVertebraSlices = false; % if 'makeVertebraSlices' = false, this is skipped
     cfg.plot.monitorDiscSlices = false; % if 'makeDiscSlices' = false, this is skipped

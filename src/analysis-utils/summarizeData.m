@@ -78,6 +78,25 @@ plotLevelwiseStats( ...
     'Title','Disc Body Volume (Level-wise)', ...
     'UseQ', true);
 
+% Reporting increases in volume/level data (mm^3/level):
+fprintf('Control vertebral body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolVertStats.MeanC)))
+fprintf('Kyphotic vertebral body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolVertStats.MeanK)))
+
+fprintf('Control disc body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolDiscStats.MeanC)))
+fprintf('Kyphotic disc body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolDiscStats.MeanK)))
+
+% Reporting relative difference between control and kyphotic (%):
+maxRelDiffVert = max((TvolVertStats.MeanC - TvolVertStats.MeanK)./TvolVertStats.MeanK * 100);
+minRelDiffVert = min((TvolVertStats.MeanC - TvolVertStats.MeanK)./TvolVertStats.MeanK * 100);
+
+maxRelDiffDisc = max((TvolDiscStats.MeanC - TvolDiscStats.MeanK)./TvolDiscStats.MeanK * 100);
+minRelDiffDisc = min((TvolDiscStats.MeanC - TvolDiscStats.MeanK)./TvolDiscStats.MeanK * 100);
+
+fprintf(['Vertebral body volumes from control specimens were %f - %f %% ' ...
+    'greater than kyphotic vertebral bodies at every level!\n'], minRelDiffVert, maxRelDiffVert)
+fprintf(['Disc body volumes from control specimens were %f - %f %% ' ...
+    'greater than kyphotic vertebral bodies at every level!\n'], minRelDiffDisc, maxRelDiffDisc)
+
 %% SPM EXTRACT
 % Extracting SPM-ready matrices from the measumrent tables
 
@@ -170,6 +189,4 @@ exportSPMArray(sumPath, 'discVol', YcDiscVol, YkDiscVol, discVol);
 %% MATLAB CLEANUP
 % Clearing leftover workspace variables, except the measurement tables:
 clearvars -except Tslice Theight Tvolume cfg;
-
-clc; % clearing command window
 

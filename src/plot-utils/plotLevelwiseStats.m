@@ -72,6 +72,7 @@ function plotLevelwiseStats(Tstats, structure, varargin)
     xlabel('Spinal Level')
     ymin = 0;
     ylim([ymin Inf]);
+    xlim([min(x) Inf]);
 
     % Get the current axes handle
     ax = gca;
