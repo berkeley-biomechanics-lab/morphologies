@@ -5,7 +5,7 @@
 % File: summarizeData.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 1-10-2026
+% Last Updated: 1-21-2026
 %
 % Description: transporting subject data from 'data/measurements' files,
 % summarizing it all into easy-to-use data structures, visualizing the
@@ -23,7 +23,7 @@ clc; % clearing command window
 fprintf('Summarizing measurements ...\n');
 
 % Includes both vertebral & disc data:
-[Tslice, Theight, Tvolume] = buildMeasurementTables(cfg);
+[Tslice, Theight, Tvolume, Theightrs] = buildMeasurementTables(cfg);
 
 %% RAW VISUALIZATION
 % Visualizing the raw data; accounting for each experiemental group, {X,Y,Z}
@@ -55,6 +55,13 @@ plotRawHeight(Theight,'Height','Structure','disc','Group','separate','Levels',le
 plotRawVolume(Tvolume,'Structure','vertebra','Levels',levels)
 plotRawVolume(Tvolume,'Structure','disc','Levels',levels)
 
+% ---- Height ratio measurements (using the following settings) ----
+%       Structure: vertebra & disc
+%       Grouping : kyphotic (blue) VS control (red)
+%       PlotType : line
+plotRawHeightRs(Theightrs,'Structure','vertebra','Levels',levels)
+plotRawHeightRs(Theightrs,'Structure','disc','Levels',levels)
+
 %% BODY LEVEL MORPHOLOGY ANALYSIS
 % Performing level-specific two-sample t-tests on body level morphology
 % metrics (i.e. volume)
@@ -62,9 +69,10 @@ plotRawVolume(Tvolume,'Structure','disc','Levels',levels)
 % Endpoint spinal levels to be exported:
 levelRange = cfg.summary.levelsExported;
 
+% ---- VOLUME ----
 % Computing level-wise t-tests from volume summary table:
-[TvolVertStats, volVertStats] = levelwiseTtests(Tvolume, 'vertebra', levelRange);
-[TvolDiscStats, volDiscStats] = levelwiseTtests(Tvolume, 'disc', levelRange);
+[TvolVertStats, volVertStats] = levelwiseTtests(Tvolume, 'vertebra', levelRange, 'Volume');
+[TvolDiscStats, volDiscStats] = levelwiseTtests(Tvolume, 'disc', levelRange, 'Volume');
 
 % Visualizing level-wise t-tests from volume summary table:
 plotLevelwiseStats( ...
@@ -97,6 +105,40 @@ fprintf(['Vertebral body volumes from control specimens were %f - %f %% ' ...
 fprintf(['Disc body volumes from control specimens were %f - %f %% ' ...
     'greater than kyphotic vertebral bodies at every level!\n'], minRelDiffDisc, maxRelDiffDisc)
 
+% ---- HEIGHT RATIO ----
+axes = {'LAT','AP'};
+
+% Computing level-wise t-tests from height ratio summary table, vertebra; both axes:
+[ThrsLATVertStats, hrsLATVertStats] = levelwiseTtests(Theightrs(Theightrs.Axis == axes{1},:), 'vertebra', levelRange, 'HeightR');
+[ThrsAPVertStats, hrsAPVertStats]   = levelwiseTtests(Theightrs(Theightrs.Axis == axes{2},:), 'vertebra', levelRange, 'HeightR');
+
+% disc; both axes:
+[ThrsLATDiscStats, hrsLATDiscStats] = levelwiseTtests(Theightrs(Theightrs.Axis == axes{1},:), 'disc', levelRange, 'HeightR');
+[ThrsAPDiscStats, hrsAPDiscStats]   = levelwiseTtests(Theightrs(Theightrs.Axis == axes{2},:), 'disc', levelRange, 'HeightR');
+
+% Visualizing level-wise t-tests from height ratio summary tables:
+plotLevelwiseStats( ...
+    ThrsLATVertStats, 'vertebra', ...
+    'YLabel','Height Ratio (mm/mm)', ...
+    'Title','Vertebral LAT Height Ratio (Level-wise)', ...
+    'UseQ', true);
+plotLevelwiseStats( ...
+    ThrsAPVertStats, 'vertebra', ...
+    'YLabel','Height Ratio (mm/mm)', ...
+    'Title','Vertebral AP Height Ratio (Level-wise)', ...
+    'UseQ', true);
+
+plotLevelwiseStats( ...
+    ThrsLATDiscStats, 'disc', ...
+    'YLabel','Height Ratio (mm/mm)', ...
+    'Title','Disc LAT Height Ratio (Level-wise)', ...
+    'UseQ', true);
+plotLevelwiseStats( ...
+    ThrsAPDiscStats, 'disc', ...
+    'YLabel','Height Ratio (mm/mm)', ...
+    'Title','Disc AP Height Ratio (Level-wise)', ...
+    'UseQ', true);
+
 %% SPM EXTRACT
 % Extracting SPM-ready matrices from the measumrent tables
 
@@ -126,17 +168,6 @@ fprintf(['Disc body volumes from control specimens were %f - %f %% ' ...
     Theight, 'height', 'AP', 'vertebra', levelRange);
 [YcDiscAP, YkDiscAP, metaDiscAP] = buildLevelStackedArray( ...
     Theight, 'height', 'AP', 'disc', levelRange);
-
-% Scalar measurements like volume are position-based sampled measurements.
-% SPM requires a 2D matrix as its input, so these measurements will be set
-% up with the dimensions: (NxQ) where
-%       N = total number subjects
-%       Q = number of resolved levels (ordered spinal levels)
-[YcVertVol, YkVertVol, levelsVertVol] = buildScalarSPMArrays( ...
-    Tvolume,'Structure','vertebra','LevelRange',levelRange);
-
-[YcDiscVol, YkDiscVol, levelsDiscVol] = buildScalarSPMArrays( ...
-    Tvolume, 'Structure','disc','LevelRange',levelRange);
 
 %% EXPORTING
 % Exporting 2D summary arrays to 'data\summary' for Python SPM analysis
@@ -175,18 +206,7 @@ discAP.levels = metaDiscAP.levelRange; discAP.axis = metaDiscAP.axis;
 discAP.measurement = metaDiscAP.measurement; discAP.structure = metaDiscAP.structure;
 exportSPMArray(sumPath, 'discAP', YcDiscAP, YkDiscAP, discAP);
 
-% ---- VOLUME: Exporting summary arrays (vertebra and disc) ----
-vertVol = struct(); vertVol.notes = 'Vertebra volume profile';
-vertVol.levels = levelsVertVol; vertVol.axis = 'volume';
-vertVol.measurement = 'volume'; vertVol.structure = 'vertebra';
-exportSPMArray(sumPath, 'vertVol', YcVertVol, YkVertVol, vertVol);
-
-discVol = struct(); discVol.notes = 'Disc volume profile';
-discVol.levels = levelsDiscVol; discVol.axis = 'volume';
-discVol.measurement = 'volume'; discVol.structure = 'disc';
-exportSPMArray(sumPath, 'discVol', YcDiscVol, YkDiscVol, discVol);
-
 %% MATLAB CLEANUP
 % Clearing leftover workspace variables, except the measurement tables:
-clearvars -except Tslice Theight Tvolume cfg;
+clearvars -except Tslice Theight Tvolume Theightrs cfg;
 

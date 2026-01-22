@@ -1,4 +1,4 @@
-function [Tout, stats] = levelwiseTtests(T, structure, levelRange, opts)
+function [Tout, stats] = levelwiseTtests(T, structure, levelRange, yvar, opts)
 % Perform level-wise t-tests from a summary table
 %
 % Inputs
@@ -6,7 +6,7 @@ function [Tout, stats] = levelwiseTtests(T, structure, levelRange, opts)
 % T         : table with variables:
 %             - Level (string/cellstr)
 %             - Group ('control' or 'kyphotic')
-%             - Volume (numeric)
+%             - (yvar) (numeric)
 % structure : 'vertebra' or 'disc'
 % opts      : (optional) struct
 %             opts.alpha (default = 0.05)
@@ -19,7 +19,7 @@ function [Tout, stats] = levelwiseTtests(T, structure, levelRange, opts)
     % -------------------------
     % Defaults
     % -------------------------
-    if nargin < 4
+    if nargin < 5
         opts = struct();
     end
     if ~isfield(opts,'alpha')
@@ -62,15 +62,15 @@ function [Tout, stats] = levelwiseTtests(T, structure, levelRange, opts)
             continue
         end
 
-        meanC(i) = mean(Tc.Volume,'omitnan');
-        stdC(i)  = std(Tc.Volume,'omitnan');
-        nC(i) = sum(~isnan(Tc.Volume), 1); % control n per level
+        meanC(i) = mean(Tc.(yvar),'omitnan');
+        stdC(i)  = std(Tc.(yvar),'omitnan');
+        nC(i) = sum(~isnan(Tc.(yvar)), 1); % control n per level
 
-        meanK(i) = mean(Tk.Volume,'omitnan');
-        stdK(i)  = std(Tk.Volume,'omitnan');
-        nK(i) = sum(~isnan(Tk.Volume), 1); % kyphotic n per level
+        meanK(i) = mean(Tk.(yvar),'omitnan');
+        stdK(i)  = std(Tk.(yvar),'omitnan');
+        nK(i) = sum(~isnan(Tk.(yvar)), 1); % kyphotic n per level
 
-        [~, pVals(i), ~, s] = ttest2(Tc.Volume, Tk.Volume, ...
+        [~, pVals(i), ~, s] = ttest2(Tc.(yvar), Tk.(yvar), ...
                                         'Vartype', opts.Vartype, ...
                                         'Alpha', opts.alpha);
         tVals(i) = s.tstat;

@@ -81,6 +81,13 @@ function cfg = makeConfig(projectPath)
     cfg.measurements.numSlices        = 200; % <--- if changed, files will be rewritten
     cfg.measurements.heightResolution = 200; % <--- if changed, files will be rewritten
 
+    % Height ratio boundaries (l --> low end of boundary, u --> upper end of boundary; 0 <= l <= u <= 0.5):
+    cfg.measurements.APrl = 0.25; % <--- if changed, files will be rewritten
+    cfg.measurements.APru = 0.35; % <--- if changed, files will be rewritten
+
+    cfg.measurements.LATrl = 0.2; % <--- if changed, files will be rewritten
+    cfg.measurements.LATru = 0.3; % <--- if changed, files will be rewritten
+
 
     % -------------------------------
     % Overwriting

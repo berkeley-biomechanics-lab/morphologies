@@ -1,4 +1,4 @@
-function plotHeightMap(height, mesh, fig)
+function plotHeightMap(height, mesh, idxAnt, idxPost, idxLeft, idxRight, fig)
 % Visualize 2D height distribution
 
     set(0, 'CurrentFigure', fig); clf; 
@@ -40,11 +40,19 @@ function plotHeightMap(height, mesh, fig)
 
     subplot(3,3,[3 6]);
     plot(height.AP.profile, height.AP.coords,'k','LineWidth',1.5)
+    yline(height.AP.coords(idxAnt(1)), '--'); % anterior region
+    yline(height.AP.coords(idxAnt(end)), '--');
+    yline(height.AP.coords(idxPost(1)), '--'); % posterior region
+    yline(height.AP.coords(idxPost(end)), '--');
     xlabel('Height (mm)'); ylabel('Anterior–Posterior (Y)');
     title('AP Height Profile');
 
     subplot(3,3,[7 8]);
     plot(height.LAT.coords, height.LAT.profile,'k','LineWidth',1.5)
+    xline(height.LAT.coords(idxLeft(1)), '--'); % left region
+    xline(height.LAT.coords(idxLeft(end)), '--');
+    xline(height.LAT.coords(idxRight(1)), '--'); % right region
+    xline(height.LAT.coords(idxRight(end)), '--');
     xlabel('Lateral (X)'); ylabel('Height (mm)');
     title('Lat Height Profile');
 

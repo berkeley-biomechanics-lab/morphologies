@@ -5,6 +5,14 @@ function height = computeHeightMap(mesh, cfg, job)
     ignorance = cfg.measurements.heightIgnorance;
     res = cfg.measurements.heightResolution;
 
+    % Height ratio parameters:
+    APrl = cfg.measurements.APrl;
+    APru = cfg.measurements.APru;
+
+    % Height ratio parameters:
+    LATrl = cfg.measurements.LATrl;
+    LATru = cfg.measurements.LATru;
+
     V = mesh.alignedProperties.Points;
     F = mesh.alignedProperties.Faces;
     tri = preprocessTriangles(V, F);
@@ -81,8 +89,14 @@ function height = computeHeightMap(mesh, cfg, job)
     height.AP.coords(ignoranceMask) = NaN;
     height.AP.profile(ignoranceMask) = NaN;
 
+    % ---- Scalar mean anterior/left and posterior/right heights ----
+    [meanAnt, meanPost, idxAnt, idxPost] = edgeMeans(height.AP.profile, APrl, APru);
+    [meanLeft, meanRight, idxLeft, idxRight] = edgeMeans(height.LAT.profile, LATrl, LATru);
+    height.APr = meanAnt/meanPost;
+    height.LATr = meanLeft/meanRight;
+
     if monitor
-        plotHeightMap(height, mesh, gcf)
+        plotHeightMap(height, mesh, idxAnt, idxPost, idxLeft, idxRight, gcf)
     end
 
     % ---- Progress update ----

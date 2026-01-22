@@ -73,15 +73,18 @@ function plotLevelwiseStats(Tstats, structure, varargin)
     ymin = 0;
     ylim([ymin Inf]);
     xlim([min(x) Inf]);
+    
+    extraYAxisProps = false;
+    if extraYAxisProps
+        % Get the current axes handle
+        ax = gca;
 
-    % Get the current axes handle
-    ax = gca;
-    
-    % Set the Exponent property to 0 to prevent scientific notation
-    ax.YAxis.Exponent = 0;
-    
-    % Use ytickformat to ensure integer display without decimals
-    ytickformat('%.0f');
+        % Set the Exponent property to 0 to prevent scientific notation
+        ax.YAxis.Exponent = 0;
+        
+        % Use ytickformat to ensure integer display without decimals
+        ytickformat('%.0f');
+    end
 
     legend({'Control (mean ± SD)','Kyphotic (mean ± SD)','Significant'}, ...
            'Location','best')

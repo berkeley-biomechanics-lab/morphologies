@@ -1,4 +1,4 @@
-function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
+function [Tslice, Theight, Tvolume, Theightrs] = buildMeasurementTables(cfg)
 
     measureDir = cfg.paths.rawMeasurements;
     files = dir(fullfile(measureDir, '*.mat'));
@@ -6,6 +6,7 @@ function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
     rows_slice  = {};
     rows_height = {};
     rows_volume = {};
+    rows_heightrs = {};
 
     for f = 1:numel(files)
 
@@ -30,6 +31,7 @@ function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
             rows_slice  = appendSlices(rows_slice,  meas, levelNames, subjectID, isKyphotic, group, "vertebra");
             rows_height = appendHeights(rows_height, meas, levelNames, subjectID, isKyphotic, group, "vertebra");
             rows_volume = appendVolumes(rows_volume, meas, levelNames, subjectID, isKyphotic, group, "vertebra");
+            rows_heightrs = appendHeightRs(rows_heightrs, meas, levelNames, subjectID, isKyphotic, group, "vertebra");
         end
 
         % ---------------- Discs ----------------
@@ -41,6 +43,7 @@ function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
             rows_slice  = appendSlices(rows_slice,  meas, levelNames, subjectID, isKyphotic, group, "disc");
             rows_height = appendHeights(rows_height, meas, levelNames, subjectID, isKyphotic, group, "disc");
             rows_volume = appendVolumes(rows_volume, meas, levelNames, subjectID, isKyphotic, group, "disc");
+            rows_heightrs = appendHeightRs(rows_heightrs, meas, levelNames, subjectID, isKyphotic, group, "disc");
         end
     end
 
@@ -55,5 +58,8 @@ function [Tslice, Theight, Tvolume] = buildMeasurementTables(cfg)
 
     Tvolume = cell2table(rows_volume, 'VariableNames', ...
         {'SubjectID','isKyphotic','Group','Structure','LevelName','Volume'});
+
+    Theightrs = cell2table(rows_heightrs, 'VariableNames', ...
+        {'SubjectID','isKyphotic','Group','Structure','LevelName', 'Axis','HeightR'});
 end
 
