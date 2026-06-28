@@ -5,7 +5,7 @@
 % File: loadGeometryMetadata.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 12-23-2025
+% Last Updated: 6-24-2026
 %
 % Description: loading and characterizing stl properties from the vertebral
 % body mesh geometries and describing vertebral, discal, and centerline
@@ -19,9 +19,16 @@ varsbefore = who;
 %% VERTEBRA STL METADATA PROCESSING
 % Loading subjects' *vertebral mesh* data into 'subjectData'
 
-% Skipping if measurements are already done:
-if measurementsDone
-    fprintf('Measurements have already done --> skipping goemetry metadata processing!\n');
+% If 'true', then disc construction will be skipped:
+alreadyMade = cfg.disc.alreadyMade;
+
+% If 'true', then disc exports will be overwritten:
+overwriteDiscExports = cfg.overwrite.discExports;
+
+% Skipping if measurements are already done or if disc exports are still to
+% be made:
+if measurementsDone && (alreadyMade && ~overwriteDiscExports)
+    fprintf('Measurements are already done, discs are already made, and will not be overwritten --> skipping goemetry metadata processing!\n');
     return;
 end
 

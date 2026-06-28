@@ -1,68 +1,78 @@
 function ax = plotSubjectMidSagittalContours(subject, ax)
-% Plot mid-sagittal contours of vertebrae and discs into provided axes
+% Plot mid-sagittal contours of vertebrae and discs into provided axes.
 %
-% ax  : axes handle (subplot / tiledlayout)
+% Since all meshes are watertight, SurfaceIntersection returns a single
+% clean closed loop per geometry. Each loop is chained into order and
+% plotted with patch().
 
-    slabTolVert = 0.5;
-    slabTolDisc = 0.5;
-    
     hold(ax, 'on');
 
-    % -------------------------
-    % Color maps
-    % -------------------------
     nVert = subject.vertebrae.numLevels;
     nDisc = subject.discs.numLevels;
 
-    vertColors = parula(nVert);              % vertebrae
-    discColors = autumn(nDisc) * 0.9;        % discs (warm)
+    vertColors = parula(nVert);
+    discColors = autumn(nDisc) * 0.9;
 
     % -------------------------
     % Vertebrae contours
     % -------------------------
-    V = subject.vertebrae;
+    V     = subject.vertebrae;
     Cvert = subject.centerline.vertebrae.C;
 
     for i = 1:nVert
-        TR = V.mesh(i).TR;
+        TR   = V.mesh(i).TR;
         xMid = Cvert(i,1);
 
-        YZ = extractMidSagittalContour(TR, xMid, slabTolVert);
-        if isempty(YZ), continue; end
+        loops = extractMidSagittalContour(TR, xMid);
+        if isempty(loops), continue; end
 
-        patch(ax, ...
-            YZ(:,1), YZ(:,2), vertColors(i,:), ...
-            'FaceAlpha', 0.35, ...
-            'EdgeColor', [0 0 0], ...
-            'LineWidth', 0.5);
+        % Use the longest loop (should be the only one for watertight mesh):
+        loop = getLongestLoop(loops);
+        if size(loop,1) < 3, continue; end
+
+        patch(ax, loop(:,1), loop(:,2), vertColors(i,:), ...
+              'FaceAlpha', 0.35, ...
+              'EdgeColor', [0 0 0], ...
+              'LineWidth', 0.5);
     end
 
     % -------------------------
     % Disc contours
     % -------------------------
-    D = subject.discs;
+    D     = subject.discs;
     Cdisc = subject.centerline.discs.C;
 
     for d = 1:nDisc
-        TR = D.mesh(d).TR;
+        TR   = D.mesh(d).TR;
         xMid = Cdisc(d,1);
 
-        YZ = extractMidSagittalContour(TR, xMid, slabTolDisc);
-        if isempty(YZ), continue; end
+        loops = extractMidSagittalContour(TR, xMid);
+        if isempty(loops), continue; end
 
-        patch(ax, ...
-            YZ(:,1), YZ(:,2), discColors(d,:), ...
-            'FaceAlpha', 0.55, ...
-            'EdgeColor', [0 0 0], ...
-            'LineWidth', 0.5);
+        loop = getLongestLoop(loops);
+        if size(loop,1) < 3, continue; end
+
+        patch(ax, loop(:,1), loop(:,2), discColors(d,:), ...
+              'FaceAlpha', 0.55, ...
+              'EdgeColor', [0 0 0], ...
+              'LineWidth', 0.5);
     end
 
-    % -------------------------
-    % Formatting
-    % -------------------------
     axis(ax, 'equal');
-
     xlabel(ax, 'Y (anterior–posterior)');
     ylabel(ax, 'Z (inferior–superior)');
+end
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% LOCAL: getLongestLoop
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+function loop = getLongestLoop(loops)
+% From a cell array of loops, return the one with the most points.
+% For watertight meshes this will always be the single closed contour.
+
+    lengths = cellfun(@(L) size(L,1), loops);
+    [~, idx] = max(lengths);
+    loop = loops{idx};
 end
 

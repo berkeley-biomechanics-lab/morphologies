@@ -1,56 +1,78 @@
 function Pk = buildLoftCurves(Pi, Ps, cfg)
-%   Pi, Ps : K×3 ordered, closed boundary loops (same K)
-%   cfg.disc.nRings        : number of interior layers
-%   cfg.disc.bulgeAmp      : max bulge magnitude (mm)
+%   Builds loft rings between two endplate boundary curves Pi (inferior)
+%   and Ps (superior), which may have different native point counts.
 %
-%   Output:
-%     Pk : cell array of size (nRings+2), each entry K×3
+%   Ring layout:
+%     Pk{1}        = Ps          [Ks pts]    exact superior endplate
+%     Pk{2:end-1}  = interior    [K_mid pts] interpolated rings
+%     Pk{end}      = Pi          [Ki pts]    exact inferior endplate
+%
+%   Special case Ks == Ki:
+%     K_mid = Ks = Ki. Interior rings are direct row-wise interpolations
+%     between Ps and Pi — no resampling — so Pk{k}(i,:) is always a
+%     blend of Ps(i,:) and Pi(i,:) with no arc-length distortion.
+%
+%   General case Ks ~= Ki:
+%     K_mid = round((Ks+Ki)/2). Interior rings are resampled to K_mid.
+%     The single count change (Ks→K_mid or Ki→K_mid) is handled in
+%     stitchDisc via buildTransitionStrip at each end seam.
 
-    % -------------------------------
-    % Configuration settings
-    % -------------------------------
-    nRings = cfg.disc.nRings;
+    nRings         = cfg.disc.nRings;
     bulgeAmplitude = cfg.disc.bulgeAmplitude;
-    
-    % -------------------------------
-    % Basic checks
-    % -------------------------------
-    assert(size(Pi,1) == size(Ps,1), ...
-        'Pi and Ps must have same number of boundary points');
 
-    % -------------------------------
-    % Loft parameter (0 = Pi, 1 = Ps)
-    % -------------------------------
-    t = linspace(0, 1, nRings+2);
+    Ks = size(Ps, 1);
+    Ki = size(Pi, 1);
 
-    % -------------------------------
-    % Disc center and radial directions
-    % -------------------------------
-    C = mean(Pi,1);
+    % Disc center (symmetric):
+    C = (mean(Ps,1) + mean(Pi,1)) / 2;
 
-    R = Pi - C;
-    R = R ./ vecnorm(R,2,2);  % normalize (K×3)
+    % ---------------------------
+    % K_mid: common count for interior rings
+    % ---------------------------
+    if Ks == Ki
+        K_mid = Ks;
+    else
+        K_mid = round((Ks + Ki) / 2);
+        K_mid = max(K_mid, 8);
+    end
 
-    % -------------------------------
-    % Bulge profile (smooth & zero at ends)
-    % -------------------------------
-    bulgeProfile = @(s) bulgeAmplitude * sin(pi*s);
+    % ---------------------------
+    % Interior loft parameters (strictly between 0 and 1)
+    % ---------------------------
+    t_all      = linspace(0, 1, nRings+2);
+    t_interior = t_all(2:end-1);
 
-    % -------------------------------
-    % Build loft curves
-    % -------------------------------
-    Pk = cell(numel(t),1);
+    % ---------------------------
+    % Build Pk
+    % ---------------------------
+    Pk      = cell(nRings+2, 1);
+    Pk{1}   = Ps;
+    Pk{end} = Pi;
 
-    for k = 1:numel(t)
-        s = t(k);
+    if Ks == Ki
+        % Direct row interpolation — no resampling of Ps or Pi
+        R = ((Ps-C) + (Pi-C)) / 2;
+        R = R ./ max(vecnorm(R,2,2), 1e-10);
 
-        % linear interpolation
-        P = (1 - s) * Ps + s * Pi;
+        for k = 1:nRings
+            s        = t_interior(k);
+            P        = (1-s)*Ps + s*Pi;
+            Pk{k+1}  = P + bulgeAmplitude*sin(pi*s)*R;
+        end
 
-        % apply bulge
-        P = P + bulgeProfile(s) * R;
+    else
+        % Resample both to K_mid for interior interpolation only
+        Ps_mid = resampleClosedCurve(Ps, K_mid);
+        Pi_mid = resampleClosedCurve(Pi, K_mid);
 
-        Pk{k} = P;
+        R = ((Ps_mid-C) + (Pi_mid-C)) / 2;
+        R = R ./ max(vecnorm(R,2,2), 1e-10);
+
+        for k = 1:nRings
+            s        = t_interior(k);
+            P        = (1-s)*Ps_mid + s*Pi_mid;
+            Pk{k+1}  = P + bulgeAmplitude*sin(pi*s)*R;
+        end
     end
 end
 

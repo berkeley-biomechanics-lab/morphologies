@@ -1,105 +1,75 @@
 function endplate = extractEndplate(mesh, Cdisc, Tdisc, which, cfg)
-% Extract vertebral endplate using signed distance to disc plane
+% Extract vertebral endplate using signed distance to disc plane.
 %
-% INPUTS
-%   mesh.TR    : triangulation
-%   Cdisc      : [1×3] disc center
-%   Tdisc      : [1×3] disc tangent (SI axis, unit)
-%   which      : 'sup' or 'inf'
-%   cfg.disc.endplateThickness   (mm)
+% Boundary ordering uses edge-chain traversal (correct for non-convex
+% boundaries). Jagged spike vertices are smoothed.
 %
-% OUTPUT
-%   endplate.TR
-
-    % ---------------------------
-    % Unpack
-    % ---------------------------
+% NO winding enforcement is applied here — winding alignment between
+% the two opposing endplates is handled once in
+% getEndplatesFromAdjacentVertebrae, where both curves are available
+% for comparison.
+ 
     V = mesh.TR.Points;
     F = mesh.TR.ConnectivityList;
-
+ 
     C = Cdisc(:)';
     n = Tdisc(:)';
     n = n / norm(n);
-
+ 
     % ---------------------------
-    % Signed distance
+    % Signed distance + slab
     % ---------------------------
-    s = (V - C) * n';
+    s               = (V - C) * n';
     proxyVertHeight = max(s) - min(s);
-
-    % ---------------------------
-    % Define slab
-    % ---------------------------
-    alpha = cfg.disc.alpha;
-    minThickness = cfg.disc.minThickness;
-    maxThickness = cfg.disc.maxThickness;
+ 
+    alpha         = cfg.disc.alpha;
     slabThickness = alpha * proxyVertHeight;
-    
-    % Applying slab thickness limits:
-    slabThickness = max(slabThickness, minThickness);
-    slabThickness = min(slabThickness, maxThickness);
+    slabThickness = max(slabThickness, cfg.disc.minThickness);
+    slabThickness = min(slabThickness, cfg.disc.maxThickness);
+ 
     switch lower(which)
         case "sup"
-            sMax = max(s);
-            keepV = s >= (sMax - slabThickness);
+            keepV = s >= (max(s) - slabThickness);
         case "inf"
-            sMin = min(s);
-            keepV = s <= (sMin + slabThickness);
+            keepV = s <= (min(s) + slabThickness);
         otherwise
-            error("which must be 'inf' or 'sup'");    
+            error("which must be 'inf' or 'sup'");
     end
-
-    % ---------------------------------
-    % Keep faces fully inside slab
-    % ---------------------------------
-    % NOTE: exported endplate surface will not be retriangulated! Once the
-    % desired s-values are chosen, the vertebra faces assocated with each
-    % s-value is identified via 'keepV' and stored in 'faceMask'. 
-    % Subsequently, the associated vertices will be stored in 'Vsub' and
-    % a triangulation object will be made:
-    faceMask = all(keepV(F), 2);
-    Fsub = F(faceMask, :);
-
+ 
     % ---------------------------
-    % Reindex vertices
+    % Keep faces fully inside slab, reindex
     % ---------------------------
+    faceMask  = all(keepV(F), 2);
+    Fsub      = F(faceMask, :);
     usedVerts = unique(Fsub(:));
-    Vsub = V(usedVerts, :);
-
-    map = zeros(size(V,1),1);
+    Vsub      = V(usedVerts, :);
+ 
+    map = zeros(size(V,1), 1);
     map(usedVerts) = 1:numel(usedVerts);
     Fsub = map(Fsub);
-
+ 
     TR = triangulation(Fsub, Vsub);
-
-    % Getting holes information:
-    endplateHasHole = hasHole(TR);
-
-    % There are a number of ways to check the quality of the extracted
-    % endplate surface. For simplicity, if # of holes > 0, then this
-    % indicates the endplate has a hole and requires a different
-    % configuration setting. Use this warning to tune the 'cfg.disc.alpha'
-    % parameter:
-    if endplateHasHole
+ 
+    if hasHole(TR)
         warning("Subject %s, %s %s endplate has a hole! Tune cfg.disc.alpha", ...
-                    mesh.subjName, mesh.levelName, which);
+                mesh.subjName, mesh.levelName, which);
     end
-
+ 
     % ---------------------------
-    % Boundary extraction
+    % Boundary extraction via edge-chain traversal
     % ---------------------------
-    Fb = freeBoundary(TR); % boundary edges
-    Praw = Vsub(unique(Fb(:)),:);
+    Fb             = freeBoundary(TR);
+    boundaryVerts  = unique(Fb(:));
+    Praw           = Vsub(boundaryVerts, :);
+ 
+    % Remap Fb to Praw-local indices:
+    remap          = zeros(size(Vsub,1), 1);
+    remap(boundaryVerts) = 1:numel(boundaryVerts);
+    FbLocal        = remap(Fb);
+ 
+    Pord = orderBoundaryLoop(Praw, FbLocal);
     
-    % ---------------------------
-    % Order boundary points
-    % ---------------------------
-    Pord = orderBoundaryLoop(Praw); % re-ordering boundary loop
-
-    % ---------------------------
-    % Output
-    % ---------------------------
     endplate.TR = TR;
-    endplate.Pb = Pord; % (ordered) boundary points
+    endplate.Pb = Pord;
 end
 

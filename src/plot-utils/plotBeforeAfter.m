@@ -66,25 +66,6 @@ function plotBeforeAfter(subjectData)
                         'FaceAlpha', 0.3, ...
                         'DisplayName', "post-alignment", ...
                         'Parent', axVert);
-
-                % Get the current axes handle
-                ax = gca;
-                
-                % Retrieve the current x and y limits
-                current_xlim = xlim(ax); current_ylim = ylim(ax);
-                
-                % Calculate the range of current limits
-                x_range = current_xlim(2) - current_xlim(1); y_range = current_ylim(2) - current_ylim(1);
-                
-                % Calculate the amount to expand (5% of the range, so 2.5% on each side)
-                expand_amount_x = x_range * 0.025; expand_amount_y = y_range * 0.025;
-                
-                % Calculate the new limits
-                new_xlim = [current_xlim(1) - expand_amount_x, current_xlim(2) + expand_amount_x];
-                new_ylim = [current_ylim(1) - expand_amount_y, current_ylim(2) + expand_amount_y];
-                
-                % Set the new limits to zoom out by 1%
-                xlim(ax, new_xlim); ylim(ax, new_ylim);
                 
                 legend;
                 drawnow;
@@ -93,7 +74,7 @@ function plotBeforeAfter(subjectData)
 
         if showDisc
             if showVert && showDisc
-                axDisc = subplot(1,2,1); axDisc.SortMethod = 'childorder';
+                axDisc = subplot(1,2,2); axDisc.SortMethod = 'childorder';
             else
                 axDisc = subplot(1,1,1); axDisc.SortMethod = 'childorder';
             end
@@ -143,25 +124,6 @@ function plotBeforeAfter(subjectData)
                         'FaceAlpha', 0.3, ...
                         'DisplayName', "post-alignment", ...
                         'Parent', axDisc);
-
-                % Get the current axes handle
-                ax = gca;
-                
-                % Retrieve the current x and y limits
-                current_xlim = xlim(ax); current_ylim = ylim(ax);
-                
-                % Calculate the range of current limits
-                x_range = current_xlim(2) - current_xlim(1); y_range = current_ylim(2) - current_ylim(1);
-                
-                % Calculate the amount to expand (5% of the range, so 2.5% on each side)
-                expand_amount_x = x_range * 0.025; expand_amount_y = y_range * 0.025;
-                
-                % Calculate the new limits
-                new_xlim = [current_xlim(1) - expand_amount_x, current_xlim(2) + expand_amount_x];
-                new_ylim = [current_ylim(1) - expand_amount_y, current_ylim(2) + expand_amount_y];
-                
-                % Set the new limits to zoom out by 1%
-                xlim(ax, new_xlim); ylim(ax, new_ylim);
                 
                 legend;
                 drawnow;
