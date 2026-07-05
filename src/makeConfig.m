@@ -103,7 +103,7 @@ function cfg = makeConfig(projectPath)
     % and superior vertebrae. These discs geometry will be created and exported
     % into stl files onto 'discPath'. If 'exports' = false, then disc 
     % levels that have already been exported will be skipped.
-    cfg.overwrite.measures = false;
+    cfg.overwrite.measures = true;
     cfg.overwrite.discExports = false; % if '.alreadyMade' = true, then '.discExports' will be skipped
 
     % -------------------------------

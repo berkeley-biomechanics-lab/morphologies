@@ -5,7 +5,7 @@
 % File: summarizeData.m
 % Author: Yousuf Abubakr
 % Project: Morphologies
-% Last Updated: 1-21-2026
+% Last Updated: 7-4-2026
 %
 % Description: transporting subject data from 'data/measurements' files,
 % summarizing it all into easy-to-use data structures, visualizing the
@@ -16,11 +16,11 @@
 clc; % clearing command window
 
 %% MEASUREMENT TABLES
-% Constructs measurement table 'T' based on the subject data in the 
-% 'data/measurements' repository
+% Constructs measurement tables based on the subject data in the 'data/raw' 
+% repository
 
 % Command window update:
-fprintf('Summarizing measurements ...\n');
+fprintf('Summarizing morphology measurements ...\n');
 
 % Includes both vertebral & disc data:
 [Tslice, Theight, Tvolume, Theightrs] = buildMeasurementTables(cfg);
@@ -55,13 +55,6 @@ plotRawHeight(Theight,'Height','Structure','disc','Group','separate','Levels',le
 plotRawVolume(Tvolume,'Structure','vertebra','Levels',levels)
 plotRawVolume(Tvolume,'Structure','disc','Levels',levels)
 
-% ---- Height ratio measurements (using the following settings) ----
-%       Structure: vertebra & disc
-%       Grouping : kyphotic (blue) VS control (red)
-%       PlotType : line
-plotRawHeightRs(Theightrs,'Structure','vertebra','Levels',levels)
-plotRawHeightRs(Theightrs,'Structure','disc','Levels',levels)
-
 %% BODY LEVEL MORPHOLOGY ANALYSIS
 % Performing level-specific two-sample t-tests on body level morphology
 % metrics (i.e. volume)
@@ -71,8 +64,10 @@ levelRange = cfg.summary.levelsExported;
 
 % ---- VOLUME ----
 % Computing level-wise t-tests from volume summary table:
-[TvolVertStats, volVertStats] = levelwiseTests(Tvolume, 'vertebra', levelRange, 'Volume');
-[TvolDiscStats, volDiscStats] = levelwiseTests(Tvolume, 'disc', levelRange, 'Volume');
+opts.multComp = 'bh';
+opts.q        = 0.05; % tolerate up to a ratio of q false discoveries
+[TvolVertStats, volVertStats] = levelwiseTests(Tvolume, 'vertebra', levelRange, 'Volume', opts);
+[TvolDiscStats, volDiscStats] = levelwiseTests(Tvolume, 'disc', levelRange, 'Volume', opts);
 
 % Visualizing level-wise t-tests from volume summary table:
 plotLevelwiseStats( ...
@@ -91,7 +86,7 @@ fprintf('Kyphotic vertebral body volume increases by an average of %f mm^3/level
 fprintf('Control disc body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolDiscStats.MedianC)))
 fprintf('Kyphotic disc body volume increases by an average of %f mm^3/level!\n', mean(diff(TvolDiscStats.MedianK)))
 
-% Reporting relative difference between control and kyphotic (%):
+% Reporting relative difference, relative to kyphotic (%):
 maxRelDiffVert = max((TvolVertStats.MedianC - TvolVertStats.MedianK)./TvolVertStats.MedianK * 100);
 minRelDiffVert = min((TvolVertStats.MedianC - TvolVertStats.MedianK)./TvolVertStats.MedianK * 100);
 
@@ -103,35 +98,10 @@ fprintf(['Vertebral body volumes from control specimens were %f - %f %% ' ...
 fprintf(['Disc body volumes from control specimens were %f - %f %% ' ...
     'greater than kyphotic vertebral bodies at every level!\n'], minRelDiffDisc, maxRelDiffDisc)
 
-% ---- HEIGHT RATIO ----
-axes = {'LAT','AP'};
+%% BODY LEVEL BMD ANALYSIS
+% Performing level-specific two-sample t-tests on body level BMD metrics
 
-% Computing level-wise t-tests from height ratio summary table, vertebra; both axes:
-[ThrsLATVertStats, hrsLATVertStats] = levelwiseTests(Theightrs(Theightrs.Axis == axes{1},:), 'vertebra', levelRange, 'HeightR');
-[ThrsAPVertStats, hrsAPVertStats]   = levelwiseTests(Theightrs(Theightrs.Axis == axes{2},:), 'vertebra', levelRange, 'HeightR');
-
-% disc; both axes:
-[ThrsLATDiscStats, hrsLATDiscStats] = levelwiseTests(Theightrs(Theightrs.Axis == axes{1},:), 'disc', levelRange, 'HeightR');
-[ThrsAPDiscStats, hrsAPDiscStats]   = levelwiseTests(Theightrs(Theightrs.Axis == axes{2},:), 'disc', levelRange, 'HeightR');
-
-% Visualizing level-wise t-tests from height ratio summary tables:
-plotLevelwiseStats( ...
-    ThrsLATVertStats, 'vertebra', ...
-    'YLabel','Height Ratio (mm/mm)', ...
-    'Title','Vertebral LAT Height Ratio (Level-wise)');
-plotLevelwiseStats( ...
-    ThrsAPVertStats, 'vertebra', ...
-    'YLabel','Height Ratio (mm/mm)', ...
-    'Title','Vertebral AP Height Ratio (Level-wise)');
-
-plotLevelwiseStats( ...
-    ThrsLATDiscStats, 'disc', ...
-    'YLabel','Height Ratio (mm/mm)', ...
-    'Title','Disc LAT Height Ratio (Level-wise)');
-plotLevelwiseStats( ...
-    ThrsAPDiscStats, 'disc', ...
-    'YLabel','Height Ratio (mm/mm)', ...
-    'Title','Disc AP Height Ratio (Level-wise)');
+analyzeBMD; % Processes the BMD measurements and runs level-wise Mann-Whitney U tests
 
 %% SPM EXTRACT
 % Extracting SPM-ready matrices from the measumrent tables
@@ -202,5 +172,5 @@ exportSPMArray(sumPath, 'discAP', YcDiscAP, YkDiscAP, discAP);
 
 %% MATLAB CLEANUP
 % Clearing leftover workspace variables, except the measurement tables:
-clearvars -except Tslice Theight Tvolume Theightrs cfg;
+clearvars -except Tslice Theight Tvolume Tbmd cfg;
 

@@ -25,9 +25,9 @@ overwriteDiscExports = cfg.overwrite.discExports;
 % If 'true', then disc construction will be skipped:
 alreadyMade = cfg.disc.alreadyMade;
 
-% Skipping if measurements are already done and discs are already made:
+% Skipping if measurements are done and discs are already made:
 if measurementsDone && alreadyMade
-    fprintf('Measurements are already done and discs are made --> skipping disc construction!\n');
+    fprintf('Measurements are done & Discs are already made --> skipping disc construction!\n');
     return;
 end
 

@@ -49,14 +49,14 @@ runSPM1D(Yc=YcDiscAP,Yk=YkDiscAP,lvlRange=lvlRangeDiscAP,title="Height (AP) - Di
 runSPM1D(Yc=YcDiscLAT,Yk=YkDiscLAT,lvlRange=lvlRangeDiscLAT,title="Height (LAT) - Disc",ylabel="inf-sup height [mm]")
 runSPM1D(Yc=YcDiscZ,Yk=YkDiscZ,lvlRange=lvlRangeDiscZ,title="CSA (Z) - Disc",ylabel="csa [mm³]")
 
-# Measuring relative mean percentile differences between control and kyphotic groups:
-vertAPPerDiffDist = (np.mean(YcVertAP, axis=0) - np.mean(YkVertAP, axis=0)) / np.mean(YkVertAP, axis=0) * 100
-vertLATPerDiffDist = (np.mean(YcVertLAT, axis=0) - np.mean(YkVertLAT, axis=0)) / np.mean(YkVertLAT, axis=0) * 100
-vertZPerDiffDist = (np.mean(YcVertZ, axis=0) - np.mean(YkVertZ, axis=0)) / np.mean(YkVertZ, axis=0) * 100
+# Measuring relative mean percentile differences between control and kyphotic groups, relative to control group mean values:
+vertAPPerDiffDist = (np.mean(YcVertAP, axis=0) - np.mean(YkVertAP, axis=0)) / np.mean(YcVertAP, axis=0) * 100
+vertLATPerDiffDist = (np.mean(YcVertLAT, axis=0) - np.mean(YkVertLAT, axis=0)) / np.mean(YcVertLAT, axis=0) * 100
+vertZPerDiffDist = (np.mean(YcVertZ, axis=0) - np.mean(YkVertZ, axis=0)) / np.mean(YcVertZ, axis=0) * 100
 
-discAPPerDiffDist = (np.mean(YcDiscAP, axis=0) - np.mean(YkDiscAP, axis=0)) / np.mean(YkDiscAP, axis=0) * 100
-discLATPerDiffDist = (np.mean(YcDiscLAT, axis=0) - np.mean(YkDiscLAT, axis=0)) / np.mean(YkDiscLAT, axis=0) * 100
-discZPerDiffDist = (np.mean(YcDiscZ, axis=0) - np.mean(YkDiscZ, axis=0)) / np.mean(YkDiscZ, axis=0) * 100
+discAPPerDiffDist = (np.mean(YcDiscAP, axis=0) - np.mean(YkDiscAP, axis=0)) / np.mean(YcDiscAP, axis=0) * 100
+discLATPerDiffDist = (np.mean(YcDiscLAT, axis=0) - np.mean(YkDiscLAT, axis=0)) / np.mean(YcDiscLAT, axis=0) * 100
+discZPerDiffDist = (np.mean(YcDiscZ, axis=0) - np.mean(YkDiscZ, axis=0)) / np.mean(YcDiscZ, axis=0) * 100
 
 # Max/min percentile differences:
 vertAPMax = np.max(vertAPPerDiffDist, where=~np.isnan(vertAPPerDiffDist), initial=-1)
